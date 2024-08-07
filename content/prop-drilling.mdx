@@ -1,0 +1,83 @@
+---
+title: "Props Drilling in React"
+publishedAt: "2024-08-07"
+summary: "Don't Let Your Components Drown in Data Debt."
+---
+
+![React useContext](https://www.copycat.dev/blog/wp-content/uploads/2023/03/react_usecontext.png)
+
+**Imagine this**: you're building a React app, everything's going smoothly, components are reusable, code is clean. Then, the dreaded data sharing issue pops up. You need user information, say the theme preference, to trickle down from the mighty App component to a tiny button component buried deep within the UI. Boom! You start passing data down, prop by prop, like a bucket brigade battling a data-fueled fire. This, my friends, is **prop drilling**, and it's a recipe for **component hell**.
+
+### Why is prop drilling bad?
+
+**Spaghetti code**: As your app grows, props become entangled, creating a complex and hard-to-debug mess.
+
+**Maintenance nightmare**: Adding new features or modifying existing ones becomes a game of prop Jenga, where one wrong move can topple the entire structure.
+
+**Component reusability suffers**: Components become tightly coupled to specific data, limiting their reusability in other parts of your app.
+
+### Enter the hero: useContext
+
+React's `useContext` hook offers a lifeline, allowing components to access shared data without explicit prop drilling. Think of it as a magical backpack accessible to anyone, regardless of their position in the component hierarchy.
+
+### How does it work?
+
+**Create a context**: Define a context object using `React.createContext()`. This object will hold your shared data.
+
+**Wrap components**: Wrap the components that need access to the data in a Provider component. This component provides the context value to its children.
+
+**Access the data**: Inside any child component, use the `useContext` hook to access the context object and its data.
+
+### Example: Theming with useContext
+
+Let's say you want to share a theme preference (light or dark) throughout your app. Here's how you can do it with `useContext`:
+
+
+#### Step 1: Create a context
+
+
+```jsx
+const ThemeContext = React.createContext({
+  theme: "light",
+  toggleTheme: () => {},
+});
+```
+
+#### Step 2: Wrap components
+
+
+```jsx
+function App() {
+  const [theme, setTheme] = useState("light");
+
+  const toggleTheme = () => {
+    setTheme(theme === "light" ? "🌑" : "☀️");
+  };
+
+  return (
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
+      {/* Your app components here */}
+    </ThemeContext.Provider>
+  );
+}
+```
+
+#### Step 3: Access the data
+
+```jsx
+function Button() {
+  const { theme, toggleTheme } = useContext(ThemeContext);
+
+  return (
+    <button style={{ backgroundColor: theme }}>
+      {theme} Mode | <button onClick={toggleTheme}>Toggle</button>
+    </button>
+  );
+}
+```
+
+Now, any component within the App component can access the theme and toggle function without needing to pass them down explicitly. No more prop drilling!
+
+### Conclusion:
+
+useContext is a powerful tool for managing shared data in your React app. It helps you avoid prop drilling and creates a more maintainable and reusable component structure. So, next time you find yourself in a data-sharing pickle, remember: useContext is your friend!

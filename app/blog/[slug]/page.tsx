@@ -60,7 +60,7 @@ export default async function Blog({
   }
 
   return (
-    <section id="blog" className="flex min-h-screen flex-col gap-6 px-6 md:px-0">
+    <section id="blog" className="flex min-h-screen flex-col gap-6 px-6 pb-6 md:px-0">
       <script
         type="application/ld+json"
         suppressHydrationWarning
