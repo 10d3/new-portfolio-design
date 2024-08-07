@@ -89,7 +89,7 @@ export default function Home() {
         </div>
       </section>
       <section id="aboutMe">
-        <BlurFade inView delay={BLUR_FADE_DELAY * 10}>
+        <BlurFade inView delay={BLUR_FADE_DELAY * 5}>
           <div className="mx-auto w-full max-w-2xl space-y-8">
             <div className="gap-2 flex justify-between flex-col-reverse">
               <div className="flex-col flex flex-1 space-y-1.5">
@@ -99,11 +99,11 @@ export default function Home() {
                   yOffset={8}
                   text={`Get to know more about me`}
                 />
-                <BlurFadeText
-                  className="max-w-[600px] md:text-xl"
-                  delay={BLUR_FADE_DELAY}
-                  text={DATA.description}
-                />
+                <BlurFade inView delay={BLUR_FADE_DELAY * 6}>
+                  <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
+                    {DATA.summary}
+                  </Markdown>
+                </BlurFade>
               </div>
               <BlurFade className="flex self-center" delay={BLUR_FADE_DELAY}>
                 <Avatar className="size-28 ">
