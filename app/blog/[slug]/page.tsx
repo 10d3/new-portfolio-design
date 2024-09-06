@@ -4,7 +4,8 @@ import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
-import "../../../styles/mdx.css"
+import "../../../styles/mdx.css";
+import Link from "next/link";
 
 export async function generateMetadata({
   params,
@@ -26,6 +27,11 @@ export async function generateMetadata({
   return {
     title,
     description,
+    keywords: post.metadata.keywords,
+    robots: {
+      index: true,
+      follow: true,
+    },
     openGraph: {
       title,
       description,
@@ -61,7 +67,10 @@ export default async function Blog({
   }
 
   return (
-    <section id="blog" className="flex min-h-screen flex-col gap-6 px-6 pb-6 md:px-0">
+    <section
+      id="blog"
+      className="flex min-h-screen flex-col gap-6 px-6 pb-6 md:px-0"
+    >
       <script
         type="application/ld+json"
         suppressHydrationWarning
@@ -98,6 +107,14 @@ export default async function Blog({
         className="mdx-component mdx-content prose dark:prose-invert"
         dangerouslySetInnerHTML={{ __html: post.source }}
       ></article>
+      <div className=" pb-10">
+        <Link
+          className=" cursor-pointer"
+          href="https://www.buymeacoffee.com/10d3"
+        >
+          <img src="https://img.buymeacoffee.com/button-api/?text=Buy me a coffee&emoji=☕&slug=10d3&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff" />
+        </Link>
+      </div>
     </section>
   );
 }
