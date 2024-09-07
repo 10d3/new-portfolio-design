@@ -36,4 +36,4 @@ export function formatDate(date: string) {
   }
 }
 
-export const BASE_URL = `${process.env.VERCEL_URL || "http://localhost:3000"}`
+export const BASE_URL = `${"amherley.vercel.app" || "http://localhost:3000"}`
