@@ -106,7 +106,7 @@ export default function Home() {
                 </BlurFade>
               </div>
               <BlurFade className="flex self-center" delay={BLUR_FADE_DELAY}>
-                <Avatar className="size-28 ">
+                <Avatar className="size-64">
                   <AvatarImage alt={DATA.name} src={DATA.avatarUrl} />
                   <AvatarFallback>{DATA.initials}</AvatarFallback>
                 </Avatar>
