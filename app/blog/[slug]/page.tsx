@@ -6,6 +6,7 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import "../../../styles/mdx.css";
 import Link from "next/link";
+import { useTheme } from "next-themes";
 
 export async function generateMetadata({
   params,
@@ -65,6 +66,7 @@ export default async function Blog({
   if (!post) {
     notFound();
   }
+
 
   return (
     <section

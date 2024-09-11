@@ -38,11 +38,13 @@ To start using Next.js 15, follow these simple steps:
 1. **Upgrade your Next.js project**: Ensure you have the latest version of Next.js by running:
 
     ```bash
-    bun install next@latest
+    bun add next@rc react@rc react-dom@rc eslint-config-next@rc
 
-    npm install next@latest
+    npm i next@rc react@rc react-dom@rc eslint-config-next@rc
 
-    yarn install next@latest
+    yarn add next@rc react@rc react-dom@rc eslint-config-next@rc
+
+    pnpm up next@rc react@rc react-dom@rc eslint-config-next@rc
     ```
 
 2. **Explore new features**: Review the Next.js 15 documentation to understand the new features and how they can be leveraged in your projects.
@@ -50,6 +52,13 @@ To start using Next.js 15, follow these simple steps:
 3. **Refactor your code**: Take advantage of new APIs and optimizations by refactoring your existing code. Pay special attention to improvements in data fetching and image optimization.
 
 4. **Test and deploy**: Thoroughly test your application with the new version and deploy it to your preferred hosting platform.
+
+### Good to know:
+
+If you see a peer dependencies warning, you may need to update `react` and `react-dom` to the suggested versions, or you can use the `--force` or `--legacy-peer-deps` flag to ignore the warning. This won't be necessary once both Next.js 15 and React 19 are stable.
+
+If you are using TypeScript, you'll need to temporarily override the React types. See the [React 19 RC upgrade guide](https://reactjs.org/blog/2020/09/22/react-v17-rc.html) for more information.
+
 
 ### Conclusion
 
