@@ -1,0 +1,119 @@
+---
+title: "Creating a Versatile Heading Component in React"
+publishedAt: "2024-03-15"
+summary: "A detailed guide on how to create a flexible and customizable Heading component using React, TypeScript, and class-variance-authority."
+keywords: ["React", "TypeScript", "class-variance-authority", "component design", "UI development", "custom hooks", "front-end development"]
+---
+
+# Creating a Versatile Heading Component in React
+
+In this blog post, we'll walk through the process of creating a highly customizable and reusable Heading component for React applications. We'll use TypeScript for type safety and the `class-variance-authority` library for managing component variants.
+
+## Setting Up the Foundation
+
+First, let's import the necessary dependencies:
+
+```jsx
+import { cn } from "@/lib/utils";
+import { cva, VariantProps } from "class-variance-authority";
+import React from "react";
+```
+
+## Defining Component Variants
+
+We use class-variance-authority to define our component variants:
+
+```jsx
+const headingVariants = cva("", {
+  variants: {
+    variant: {
+      default: "text-primary",
+      secondary: "text-secondary",
+      // ... other variants
+    },
+    size: {
+      xs: "text-xs",
+      sm: "text-sm",
+      // ... other sizes
+    },
+    weight: {
+      normal: "font-normal",
+      medium: "font-medium",
+      // ... other weights
+    },
+  },
+  defaultVariants: {
+    variant: "default",
+    size: "default",
+    weight: "normal",
+  },
+});
+```
+
+This setup allows us to easily manage different styles for our Heading component.
+
+## Creating the Component Interface
+
+We define the HeadingProps interface to type our component props:
+
+```jsx
+export interface HeadingProps
+  extends React.HTMLAttributes<HTMLHeadingElement>,
+    VariantProps<typeof headingVariants> {
+  as?: React.ElementType;
+}
+```
+## Implementing Font Mapping
+
+To ensure consistent typography across different HTML elements, we create a tagFontMap:
+
+```jsx
+const tagFontMap: Record<string, string> = {
+  h1: "font-montserrat font-bold tracking-tight",
+  p: "font-roboto leading-relaxed",
+  // ... other mappings
+};
+```
+## Building the Heading Component
+
+Now, let's put it all together in our Heading component:
+
+```jsx
+const Heading = ({
+  as: Tag = "h1",
+  className,
+  variant,
+  size,
+  ...props
+}: HeadingProps) => {
+  const fontClass =
+    typeof Tag === "string" && tagFontMap[Tag]
+      ? tagFontMap[Tag]
+      : "font-roboto";
+
+  return (
+    <Tag
+      className={cn(fontClass, headingVariants({ variant, size }), className)}
+      {...props}
+    />
+  );
+};
+```
+This component dynamically selects the appropriate font based on the tag and applies the specified variants.
+
+## Usage Example
+
+Here's how you can use the Heading component in your React application:
+
+```jsx
+<Heading as="h2" variant="secondary" size="lg">
+  Welcome to My Blog
+</Heading>
+```
+## Conclusion
+
+By creating this versatile Heading component, we've established a foundation for consistent typography across our application. This approach allows for easy customization and maintenance of heading styles, promoting better design consistency and developer experience.
+
+Remember, the key to a good component is flexibility and reusability. This Heading component achieves both while maintaining type safety and style consistency.
+
+Happy coding!
