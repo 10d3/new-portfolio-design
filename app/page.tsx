@@ -100,7 +100,7 @@ export default function Home() {
                   text={`Get to know more about me`}
                 />
                 <BlurFade inView delay={BLUR_FADE_DELAY * 2}>
-                  <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
+                  <Markdown className="prose max-w-full text-pretty font-sans text-base text-muted-foreground dark:prose-invert">
                     {DATA.summary}
                   </Markdown>
                 </BlurFade>
