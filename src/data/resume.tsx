@@ -5,7 +5,7 @@ import { CodeIcon, HomeIcon, NotebookIcon, PencilLine } from "lucide-react";
 export const DATA = {
   name: "Herley",
   initials: "MHA",
-  url: "https://herley.netlify.app",
+  url: "https://amherley.dev",
   location: "Fort-Liberte, HT",
   locationLink: "https://www.google.com/maps/place/sanfrancisco",
   description:
