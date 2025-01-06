@@ -1,0 +1,84 @@
+---
+title: "Troubleshooting Redis Connection Issues in Dockerized Applications"
+publishedAt: "2025-01-05"
+keywords: ["Redis", "Docker", "Coolify", "BullMQ", "Networking", "Troubleshooting"]
+---
+
+When I first decided to deploy my backend with Redis using Coolify, I thought it would be straightforward. Redis in one container, the backend in another—what could go wrong? Spoiler alert: everything.
+
+## The Setup
+
+Locally, everything was perfect. Redis and BullMQ worked like a dream. But as soon as I deployed, my backend decided it wanted nothing to do with Redis. The dreaded error:
+
+```plaintext
+ECONNREFUSED: Failed to connect
+   errno: 103
+   syscall: "connect"
+```
+
+That’s when I knew I was in for a long day (or two).
+
+---
+
+## Troubleshooting Steps
+
+### 1. Testing Network Connectivity
+
+My first thought was, "Maybe Docker networking is the issue?" So I pinged the Redis container from within the backend container. Success! They could see each other. This confirmed that Docker’s networking magic was working just fine.
+
+But BullMQ? It was still sitting in the corner, arms crossed, refusing to connect.
+
+### 2. The “Blame BullMQ” Phase
+
+“Maybe it’s BullMQ,” I thought. Developers love to blame the tools, right? So I swapped it out for ioredis. Surely, this will work, I told myself.
+
+Spoiler: It didn’t.
+
+At this point, I had a moment of existential dread. Was it me? Was it Redis? Was it Docker? Was it… fate?
+
+### 3. Double-Checking Environment Variables
+
+When all else fails, blame the `.env` file. I triple-checked every environment variable:
+
+- **`REDIS_HOST`**: ✅
+- **`REDIS_PORT`**: ✅
+- **`REDIS_USERNAME` and `REDIS_PASSWORD`**: ✅
+
+Everything looked correct. I even redeployed the backend to ensure the changes applied. No dice.
+
+At this point, I was beginning to think my `.env` file was just a modern-day Horcrux.
+
+### 4. Recreating Redis
+
+Frustrated but still clinging to hope, I deleted the Redis database and recreated it from scratch with default settings. I updated my backend credentials and redeployed, ready for victory.
+
+Guess what? The error laughed in my face. Again.
+
+## A New Approach: Manual Setup
+
+Desperation breeds creativity. I manually spun up a Redis container outside of Coolify and connected it to the Coolify Docker network. Then, I updated my backend configuration to use the Redis container’s IP address instead of its name.
+
+And finally… it worked!
+
+Well, sort of. I quickly realized that using the IP address was a terrible idea. Why? Because container IPs change after a reboot. I had fixed the issue temporarily but set myself up for future headaches.
+
+## Final Adjustment: Switching to Container DNS
+
+The aha moment came when I decided to use Docker’s DNS system. Instead of relying on the IP address, I updated my backend to reference the Redis container by its name. This way, the connection would persist even if the container restarted.
+
+Finally, BullMQ was happy. Redis was happy. And most importantly, I was happy.
+
+## Lessons Learned
+
+Looking back, this journey taught me a few valuable lessons:
+
+- **Networking Matters**: Always verify that containers are on the same Docker network.
+- **Library-Specific Behavior**: Not all libraries handle connections the same way. Be prepared to test alternatives.
+- **Environment Variables Are Key**: Double-check them and redeploy to apply changes.
+- **Use Docker DNS**: Relying on container names rather than IPs is a best practice for Dockerized applications.
+
+## Conclusion
+
+This journey was equal parts frustrating and educational. Debugging in Dockerized environments can feel like trying to solve a Rubik’s Cube with one hand tied behind your back. But with patience, methodical troubleshooting, and a bit of programmer humor, I managed to untangle the mess.
+
+So, if you ever find yourself battling Docker, Redis, or BullMQ, remember: the solution might be just one DNS name away. And if not? Well, at least you’ll have a story to tell. 😄
