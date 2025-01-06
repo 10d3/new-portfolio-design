@@ -3,8 +3,8 @@ import { getBlogPosts } from "@/data/blog";
 import Link from "next/link";
 
 export const metadata = {
-  title: "Blog",
-  description: "My thoughts on software development, life, and more.",
+  title: "Tech Musings by 10D3",
+  description: "Debugging life one blog post at a time—thoughts on software development, life, and the occasional infinite loop.",
 };
 
 const BLUR_FADE_DELAY = 0.04;
