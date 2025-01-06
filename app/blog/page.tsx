@@ -12,7 +12,7 @@ export const metadata = {
     siteName: "Tech Musings by 10D3",
     images: [
       {
-        url: "https://amherley.dev/blog.jpg", // Replace with your OpenGraph image URL
+        url: "https://amherley.dev/blog.png", // Replace with your OpenGraph image URL
         width: 1200,
         height: 630,
         alt: "Tech Musings by 10D3 - Debugging life one blog post at a time",
