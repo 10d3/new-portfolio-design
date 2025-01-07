@@ -24,13 +24,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     // },
     // Other pages (add more routes as needed)
     {
-      url: `${BASE_URL}/about`,
+      url: `${BASE_URL}/#about`,
       lastModified: new Date().toISOString(),
       changeFrequency: 'monthly',
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/contact`,
+      url: `${BASE_URL}/#contact`,
       lastModified: new Date().toISOString(),
       changeFrequency: 'monthly',
       priority: 0.8,
