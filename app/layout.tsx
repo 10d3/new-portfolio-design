@@ -9,10 +9,24 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Herley's Portfolio",
-  description: "Showcasing projects, skills, and achievements in web development and design.",
+  description:
+    "Showcasing projects, skills, and achievements in web development and design.",
+  keywords: [
+    "Next.js Developer",
+    "Frontend Developer",
+    "JavaScript Developer",
+    "React Developer",
+    "UI/UX Designer",
+    "Full Stack Developer",
+    "Web Development",
+    "Responsive Design",
+    "Performance Optimization",
+    "Marc-Herley Antoine Portfolio",
+  ],
   openGraph: {
     title: "Herley's Portfolio",
-    description: "Explore my projects, skills, and accomplishments in web development and design. Let's create something amazing together!",
+    description:
+      "Explore my projects, skills, and accomplishments in web development and design. Let's create something amazing together!",
     url: "https://amherley.dev/", // Replace with your actual portfolio URL
     siteName: "Herley's Portfolio",
     images: [
@@ -52,10 +66,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={cn(
+      <body
+        className={cn(
           "flex flex-col gap-12 max-w-2xl mx-auto",
           inter.className
-        )}>
+        )}
+      >
         <Providers>
           <Navbar />
           {children}

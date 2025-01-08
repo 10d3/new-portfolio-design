@@ -4,10 +4,24 @@ import Link from "next/link";
 
 export const metadata = {
   title: "Tech Musings by 10D3",
-  description: "Debugging life one blog post at a time—thoughts on software development, life, and the occasional infinite loop.",
+  description:
+    "Debugging life one blog post at a time—thoughts on software development, life, and the occasional infinite loop.",
+  keywords: [
+    "Web Development Tips",
+    "Next.js Tutorials",
+    "JavaScript Best Practices",
+    "React.js Guides",
+    "UI/UX Design Principles",
+    "Frontend Development",
+    "Performance Optimization Techniques",
+    "Responsive Web Design",
+    "SEO Strategies for Developers",
+    "Building E-commerce Websites",
+  ],
   openGraph: {
     title: "Tech Musings by 10D3",
-    description: "Debugging life one blog post at a time—thoughts on software development, life, and the occasional infinite loop.",
+    description:
+      "Debugging life one blog post at a time—thoughts on software development, life, and the occasional infinite loop.",
     url: "https://amherley.dev/", // Replace with your website URL
     siteName: "Tech Musings by 10D3",
     images: [
@@ -24,7 +38,8 @@ export const metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Tech Musings by 10D3",
-    description: "Debugging life one blog post at a time—thoughts on software, life, and the occasional infinite loop.",
+    description:
+      "Debugging life one blog post at a time—thoughts on software, life, and the occasional infinite loop.",
     creator: "@Kryptoeden7", // Replace with your Twitter handle
     site: "@Kryptoeden7",
     images: [
