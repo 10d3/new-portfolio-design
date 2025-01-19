@@ -37,7 +37,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      {/* <section id="about">
+      <section id="about">
         <BlurFade delay={BLUR_FADE_DELAY * 3}>
           <h2 className="text-xl font-bold">About</h2>
         </BlurFade>
@@ -46,8 +46,8 @@ export default function Home() {
             {DATA.summary}
           </Markdown>
         </BlurFade>
-      </section> */}
-      {/* <section id="projects">
+      </section>
+      <section id="projects">
         <div className="space-y-12 w-full py-12">
           <BlurFade delay={BLUR_FADE_DELAY * 11}>
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
@@ -87,8 +87,8 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </section> */}
-      <section id="aboutMe">
+      </section>
+      {/* <section id="aboutMe">
         <BlurFade inView delay={BLUR_FADE_DELAY}>
           <div className="mx-auto w-full max-w-2xl space-y-8">
             <div className="gap-2 flex justify-between flex-col-reverse">
@@ -114,7 +114,7 @@ export default function Home() {
             </div>
           </div>
         </BlurFade>
-      </section>
+      </section> */}
     </main>
   );
 }

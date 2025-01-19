@@ -11,7 +11,7 @@ export const DATA = {
   description:
     "Full-Stack developer. I'm passionate about building things and helping people.",
   summary:
-    "I'm a builder at heart, always on the lookout for the next challenge to tackle and the next problem to solve. I'm passionate about creating SaaS solutions that make a real difference in people's lives, and I thrive on the process of bringing ideas to life. Whether it's coding, designing, or simply brainstorming, I love the feeling of building something from scratch and watching it grow into something amazing. As a remote worker, I've got the freedom to focus on what I love - building innovative solutions that make a real impact. And when I'm not working, you can find me trying to convince my cat to be my coding buddy (so far, no luck)!",
+    "I'm a builder at heart, passionate about creating SaaS solutions that solve real problems and make a difference. From coding to designing, I thrive on bringing ideas to life and watching them grow. As a remote worker, I focus on building innovative tools that truly impact lives—often with my cat nearby (though not yet a coding buddy)!",
   avatarUrl: "/me.png",
   skills: [
     "React",
@@ -184,12 +184,12 @@ export const DATA = {
   //   ],
   projects: [
     {
-      title: "NextJS Boilerplate",
-      href: "https://next-js-boilerplate-herley.vercel.app",
-      dates: "Jan 2024 - Feb 2024",
+      title: "SayItAI",
+      href: "https://sayitai.com",
+      dates: "Nov 2024 - Jan 2025",
       active: true,
       description:
-        "A boilerplate for Next.js with various features and optimizations.",
+        "Transform your videos and podcast into authentic multilingual content with our advanced AI transcreation technology.",
       technologies: [
         "Next.js",
         "Typescript",
@@ -201,13 +201,14 @@ export const DATA = {
         "Magic UI",
         "Next-Auth",
         "I18n",
-        "MDX Blog",
+        // "MDX Blog",
+        "OpenAI",
       ],
       links: [
         {
           type: "Website",
-          href: "A boilerplate for Next.js with various features and optimizations.",
-          //   icon: <Icons.globe className="size-3" />,
+          href: "https://sayitai.com",
+            icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "",
@@ -215,99 +216,99 @@ export const DATA = {
         "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4",
     },
     {
-      title: "Magic UI",
-      href: "https://magicui.design",
-      dates: "June 2023 - Present",
+      title: "SayItAI Back-End",
+      href: "",
+      dates: "Dec 2023 - Present",
       active: false,
       description:
         "Designed, developed and sold animated UI components for developers.",
       technologies: [
-        "Next.js",
+        "ExpressJS",
         "Typescript",
         "PostgreSQL",
         "Prisma",
-        "TailwindCSS",
-        "Stripe",
-        "Shadcn UI",
-        "Magic UI",
+        "ffmpeg",
+        // "Stripe",
+        // "Shadcn UI",
+        // "Magic UI",
       ],
       links: [
         {
           type: "Website",
           href: "https://magicui.design",
-          //   icon: <Icons.globe className="size-3" />,
+            icon: <Icons.globe className="size-3" />,
         },
         {
           type: "Source",
           href: "https://github.com/magicuidesign/magicui",
-          //   icon: <Icons.github className="size-3" />,
+            icon: <Icons.github className="size-3" />,
         },
       ],
       image: "",
       video: "https://cdn.magicui.design/bento-grid.mp4",
     },
-    {
-      title: "llm.report",
-      href: "https://llm.report",
-      dates: "April 2023 - September 2023",
-      active: false,
-      description:
-        "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://llm.report",
-          //   icon: <Icons.globe className="size-3" />,
-        },
-        {
-          type: "Source",
-          href: "https://github.com/dillionverma/llm.report",
-          //   icon: <Icons.github className="size-3" />,
-        },
-      ],
-      image: "",
-      video: "https://cdn.llm.report/openai-demo.mp4",
-    },
-    {
-      title: "Automatic Chat",
-      href: "https://automatic.chat",
-      dates: "April 2023 - March 2024",
-      active: false,
-      description:
-        "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
-      technologies: [
-        "Next.js",
-        "Typescript",
-        "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
-      ],
-      links: [
-        {
-          type: "Website",
-          href: "https://automatic.chat",
-          //   icon: <Icons.globe className="size-3" />,
-        },
-      ],
-      image: "",
-      video:
-        "https://pub-83c5db439b40468498f97946200806f7.r2.dev/automatic-chat.mp4",
-    },
+    // {
+    //   title: "llm.report",
+    //   href: "https://llm.report",
+    //   dates: "April 2023 - September 2023",
+    //   active: false,
+    //   description:
+    //     "Developed an open-source logging and analytics platform for OpenAI: Log your ChatGPT API requests, analyze costs, and improve your prompts.",
+    //   technologies: [
+    //     "Next.js",
+    //     "Typescript",
+    //     "PostgreSQL",
+    //     "Prisma",
+    //     "TailwindCSS",
+    //     "Shadcn UI",
+    //     "Magic UI",
+    //     "Stripe",
+    //     "Cloudflare Workers",
+    //   ],
+    //   links: [
+    //     {
+    //       type: "Website",
+    //       href: "https://llm.report",
+    //       //   icon: <Icons.globe className="size-3" />,
+    //     },
+    //     {
+    //       type: "Source",
+    //       href: "https://github.com/dillionverma/llm.report",
+    //       //   icon: <Icons.github className="size-3" />,
+    //     },
+    //   ],
+    //   image: "",
+    //   video: "https://cdn.llm.report/openai-demo.mp4",
+    // },
+    // {
+    //   title: "Automatic Chat",
+    //   href: "https://automatic.chat",
+    //   dates: "April 2023 - March 2024",
+    //   active: false,
+    //   description:
+    //     "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
+    //   technologies: [
+    //     "Next.js",
+    //     "Typescript",
+    //     "PostgreSQL",
+    //     "Prisma",
+    //     "TailwindCSS",
+    //     "Shadcn UI",
+    //     "Magic UI",
+    //     "Stripe",
+    //     "Cloudflare Workers",
+    //   ],
+    //   links: [
+    //     {
+    //       type: "Website",
+    //       href: "https://automatic.chat",
+    //       //   icon: <Icons.globe className="size-3" />,
+    //     },
+    //   ],
+    //   image: "",
+    //   video:
+    //     "https://pub-83c5db439b40468498f97946200806f7.r2.dev/automatic-chat.mp4",
+    // },
   ],
   //   hackathons: [
   //     {
