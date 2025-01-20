@@ -211,7 +211,7 @@ export const DATA = {
             icon: <Icons.globe className="size-3" />,
         },
       ],
-      image: "/sayitai.png",
+      image: "",
       video:
         "https://cuajuep66z.ufs.sh/f/ZuLpxltn4GuJU3jCQdB2l6tPHkBKI7CAj5Z3c1yXdMTgiumq",
       // video:
