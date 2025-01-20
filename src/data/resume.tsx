@@ -213,7 +213,7 @@ export const DATA = {
       ],
       image: "/sayitai.png",
       video:
-        "",
+        "https://cuajuep66z.ufs.sh/f/ZuLpxltn4GuJU3jCQdB2l6tPHkBKI7CAj5Z3c1yXdMTgiumq",
       // video:
       //   "https://pub-83c5db439b40468498f97946200806f7.r2.dev/chat-collect.mp4",
     },
