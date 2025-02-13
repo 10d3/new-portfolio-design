@@ -225,7 +225,7 @@ export const DATA = {
       dates: "Dec 2023 - Present",
       active: false,
       description:
-        "Designed, developed and sold animated UI components for developers.",
+        "This backend project uses Redis to support workers, JSON Web Tokens (JWT) for secure authentication, WebSocket for real-time communication, BullMQ for job scheduling, and FFmpeg for audio processing. Together, these technologies create an efficient audio processing solution.",
       technologies: [
         "ExpressJS",
         "Typescript",
@@ -238,19 +238,19 @@ export const DATA = {
         "JsonWebToken",
       ],
       links: [
-        {
-          type: "Website",
-          href: "https://magicui.design",
-            icon: <Icons.globe className="size-3" />,
-        },
+        // {
+        //   type: "Website",
+        //   href: "",
+        //     icon: <Icons.globe className="size-3" />,
+        // },
         {
           type: "Source",
-          href: "https://github.com/magicuidesign/magicui",
+          href: "https://github.com/10d3/ai-multi-track-backend",
             icon: <Icons.github className="size-3" />,
         },
       ],
-      image: "",
-      video: "https://cdn.magicui.design/bento-grid.mp4",
+      image: "/backend.png",
+      video: "",
     },
     {
       title: "Fort&Fier",
@@ -258,7 +258,7 @@ export const DATA = {
       dates: "janv 2025 - Feb 2025",
       active: false,
       description:
-        "Fort&Fier is an e-commerce platform on YourNextStore that empowers businesses to sell online. It integrates Printify for merchants abroad, offering customizable products and local fulfillment, along with an order management system and a dashboard for product creation.",
+        "Fort&Fier is an e-commerce platform on YourNextStore that empowers businesses to sell online. I personally added an order management system and Printify integration, features not included in the standard YourNextStore template. This allows merchants to access customizable products with local fulfillment and manage their orders efficiently.",
       technologies: [
         "Next.js",
         "Typescript",
