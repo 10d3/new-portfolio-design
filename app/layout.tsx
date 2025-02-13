@@ -5,6 +5,12 @@ import Providers from "./Providers";
 import Navbar from "@/components/layout/Navbar";
 import { cn } from "@/lib/utils";
 
+declare global {
+  interface Window {
+    plausible: any;
+  }
+}
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -72,6 +78,16 @@ export default function RootLayout({
           inter.className
         )}
       >
+        <script
+          defer
+          data-domain="amherley.dev"
+          src="https://plausible.amherley.dev/js/script.hash.outbound-links.pageview-props.tagged-events.js"
+        ></script>
+        <script>
+          window.plausible = window.plausible || function(){" "}
+          {(window.plausible.q = window.plausible.q || []).push(arguments)}
+        </script>
+
         <Providers>
           <Navbar />
           {children}
