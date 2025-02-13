@@ -4,6 +4,7 @@ import "./globals.css";
 import Providers from "./Providers";
 import Navbar from "@/components/layout/Navbar";
 import { cn } from "@/lib/utils";
+import Script from 'next/script';
 
 declare global {
   interface Window {
@@ -78,15 +79,18 @@ export default function RootLayout({
           inter.className
         )}
       >
-        <script
+        <Script
           defer
           data-domain="amherley.dev"
           src="https://plausible.amherley.dev/js/script.hash.outbound-links.pageview-props.tagged-events.js"
-        ></script>
-        <script>
-          window.plausible = window.plausible || function(){" "}
-          {(window.plausible.q = window.plausible.q || []).push(arguments)}
-        </script>
+        />
+        <Script id="plausible-script">
+          {`
+            window.plausible = window.plausible || function() {
+              (window.plausible.q = window.plausible.q || []).push(arguments)
+            }
+          `}
+        </Script>
 
         <Providers>
           <Navbar />
