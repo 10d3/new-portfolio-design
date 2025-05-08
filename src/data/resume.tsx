@@ -210,7 +210,7 @@ export const DATA = {
         {
           type: "Website",
           href: "https://sayitai.com",
-            icon: <Icons.globe className="size-3" />,
+          icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "",
@@ -246,7 +246,7 @@ export const DATA = {
         {
           type: "Source",
           href: "https://github.com/10d3/ai-multi-track-backend",
-            icon: <Icons.github className="size-3" />,
+          icon: <Icons.github className="size-3" />,
         },
       ],
       image: "/backend.png",
@@ -277,16 +277,17 @@ export const DATA = {
         {
           type: "Website",
           href: "https://fortetfier.com",
-            icon: <Icons.globe className="size-3" />,
+          icon: <Icons.globe className="size-3" />,
         },
         {
           type: "Source",
           href: "https://github.com/10d3/shopShirt",
-            icon: <Icons.github className="size-3" />,
+          icon: <Icons.github className="size-3" />,
         },
       ],
       image: "",
-      video: "https://cuajuep66z.ufs.sh/f/ZuLpxltn4GuJmsSLlOPXnzLmANQHCx5JsdpV2baBK7rjGfZk",
+      video:
+        "https://cuajuep66z.ufs.sh/f/ZuLpxltn4GuJmsSLlOPXnzLmANQHCx5JsdpV2baBK7rjGfZk",
     },
     {
       title: "Nexora",
@@ -294,23 +295,24 @@ export const DATA = {
       dates: "April 2025 - Present",
       active: true,
       description:
-        "Developed an AI Customer Support Chatbot which automatically responds to customer support tickets using the latest GPT models.",
+        "Nexora is a next-generation, multi-tenant Point of Sale platform built with Next.js. It lets each business spin up its own branded subdomain, manage inventory, orders, customers and users with role-based access, and choose from tiered subscription plans—all on a scalable Prisma/PostgreSQL backend and deployed seamlessly via Vercel.",
       technologies: [
-        "Next.js",
-        "Typescript",
+        "Next.js 15+",
+        "React 19",
+        "Tailwind CSS",
+        "Radix UI",
+        "Next.js API Routes",
+        "Prisma ORM",
         "PostgreSQL",
-        "Prisma",
-        "TailwindCSS",
-        "Shadcn UI",
-        "Magic UI",
-        "Stripe",
-        "Cloudflare Workers",
+        "Auth.js",
+        "JSON Web Tokens (JWT)",
+        "Typescript"
       ],
       links: [
         {
           type: "source",
           href: "https://github.com/10d3/nexora",
-            icon: <Icons.github className="size-3" />,
+          icon: <Icons.github className="size-3" />,
         },
       ],
       image: "",
