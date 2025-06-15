@@ -6,8 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Music, ExternalLink } from "lucide-react";
+import { motion, Variants } from "framer-motion";
 import type { SpotifyNowPlayingResponse } from "@/lib/types/spotify";
-import { calculateProgress } from "@/lib/time";
 
 export function SpotifyNowPlaying() {
   const [data, setData] = useState<SpotifyNowPlayingResponse | null>(null);
@@ -57,9 +57,46 @@ export function SpotifyNowPlaying() {
     return () => clearInterval(progressInterval);
   }, [data?.is_playing, data?.item]);
 
+  // Framer Motion animation variants
+  const musicIconVariants: Variants = {
+    animate: {
+      scale: [1, 1.2, 1],
+      rotate: [0, -5, 5, 0],
+      transition: {
+        duration: 1.5,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const musicIconPulse: Variants = {
+    animate: {
+      scale: [1, 1.15, 1],
+      opacity: [0.7, 1, 0.7],
+      transition: {
+        duration: 1.2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
+
+  const pulseVariants: Variants = {
+    animate: {
+      scale: [1, 1.1, 1],
+      opacity: [1, 0.7, 1],
+      transition: {
+        duration: 2,
+        repeat: Infinity,
+        ease: "easeInOut",
+      },
+    },
+  };
+
   if (loading) {
     return (
-      <Card className="w-full max-w-xs border-0 shadow-sm bg-gradient-to-r from-slate-50 to-gray-50">
+      <Card className="w-full max-w-xs">
         <CardContent className="p-2">
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-8 rounded flex-shrink-0" />
@@ -75,10 +112,12 @@ export function SpotifyNowPlaying() {
 
   if (error) {
     return (
-      <Card className="w-full hidden max-w-xs border-0 shadow-sm bg-gradient-to-r from-red-50 to-rose-50">
+      <Card className="w-full max-w-xs border-destructive/20 bg-destructive/5 hidden">
         <CardContent className="p-2">
-          <div className="flex items-center gap-2 text-red-600">
-            <Music className="h-3 w-3" />
+          <div className="flex items-center gap-2 text-destructive">
+            <motion.div variants={musicIconVariants} animate="animate">
+              <Music className="h-3 w-3" />
+            </motion.div>
             <p className="text-xs font-medium">Unable to load</p>
           </div>
         </CardContent>
@@ -88,10 +127,12 @@ export function SpotifyNowPlaying() {
 
   if (!data || !data.is_playing || !data.item) {
     return (
-      <Card className="mt-4 hidden w-full max-w-xs border-0 shadow-sm bg-gradient-to-r from-gray-50 to-slate-50">
+      <Card className="w-full max-w-xs hidden">
         <CardContent className="p-2">
-          <div className="flex items-center gap-2 text-gray-500">
-            <div className="h-1.5 w-1.5 rounded-full bg-gray-400" />
+          <div className="flex items-center gap-2 text-muted-foreground">
+            <motion.div variants={musicIconVariants} animate="animate">
+              <Music className="h-3 w-3" />
+            </motion.div>
             <p className="text-xs font-medium">Not playing</p>
           </div>
         </CardContent>
@@ -99,64 +140,90 @@ export function SpotifyNowPlaying() {
     );
   }
 
-  const { item, device, shuffle_state, repeat_state } = data;
+  const { item } = data;
   const artistNames = item.artists.map((artist) => artist.name).join(", ");
   const albumImage = item.album.images[0]?.url;
-  const progressPercentage = calculateProgress(
-    currentProgress,
-    item.duration_ms
-  );
 
   return (
-    <Card className=" mt-2 w-full max-w-xs border-0 shadow-sm bg-gradient-to-r from-green-50 to-emerald-50 hover:shadow-md transition-all duration-300 group">
-      <CardContent className="p-2">
-        <div className="flex items-center gap-2">
-          {albumImage ? (
-            <div className="relative flex-shrink-0">
-              <Image
-                src={albumImage || "/placeholder.svg"}
-                alt={`${item.album.name} cover`}
-                width={32}
-                height={32}
-                className="h-8 w-8 rounded object-cover"
-              />
-              <div className="absolute -top-0.5 -right-0.5">
-                <div className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
+      <Card className="w-full mt-8 max-w-xs border-green-200 bg-green-50/50 hover:bg-green-50/80 dark:border-green-800 dark:bg-green-950/30 dark:hover:bg-green-950/50 transition-all duration-300 group">
+        <CardContent className="p-2">
+          <div className="flex items-center gap-2">
+            {albumImage ? (
+              <div className="relative flex-shrink-0">
+                <motion.div
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ type: "spring", stiffness: 300 }}
+                >
+                  <Image
+                    src={albumImage || "/placeholder.svg"}
+                    alt={`${item.album.name} cover`}
+                    width={32}
+                    height={32}
+                    className="h-8 w-8 rounded object-cover ring-1 ring-border"
+                  />
+                </motion.div>
+                <div className="absolute -top-0.5 -right-0.5">
+                  <motion.div
+                    className="h-2 w-2 rounded-full bg-green-500 shadow-sm"
+                    variants={pulseVariants}
+                    animate="animate"
+                  />
+                </div>
               </div>
-            </div>
-          ) : (
-            <div className="h-8 w-8 rounded bg-gray-200 flex items-center justify-center flex-shrink-0">
-              <Music className="h-3 w-3 text-gray-400" />
-            </div>
-          )}
+            ) : (
+              <div className="h-8 w-8 rounded bg-muted flex items-center justify-center flex-shrink-0">
+                <motion.div variants={musicIconPulse} animate="animate">
+                  <Music className="h-3 w-3 text-green-500" />
+                </motion.div>
+              </div>
+            )}
 
-          <div className="flex-1 min-w-0">
-            <a
-              href={item.external_urls.spotify}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block group-hover:text-green-700 transition-colors duration-200"
-            >
-              <div className="flex items-center gap-1">
-                <p className="font-medium text-xs truncate leading-tight">
-                  {item.name}
+            <div className="flex-1 min-w-0">
+              <a
+                href={item.external_urls.spotify}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="block hover:text-green-600 dark:hover:text-green-400 transition-colors duration-200"
+              >
+                <div className="flex items-center gap-1">
+                  <p className="font-medium text-xs truncate leading-tight text-foreground">
+                    {item.name}
+                  </p>
+                  <motion.div
+                    initial={{ opacity: 0, x: -5 }}
+                    whileHover={{ opacity: 1, x: 0 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <ExternalLink className="h-2.5 w-2.5 flex-shrink-0" />
+                  </motion.div>
+                </div>
+                <p className="text-xs text-muted-foreground truncate leading-tight">
+                  {artistNames}
                 </p>
-                <ExternalLink className="h-2.5 w-2.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex-shrink-0" />
-              </div>
-              <p className="text-xs text-gray-600 truncate leading-tight">
-                {artistNames}
-              </p>
-            </a>
-          </div>
+              </a>
+            </div>
 
-          <Badge
-            variant="secondary"
-            className="text-xs px-1.5 py-0.5 bg-green-100 text-green-700 border-0 font-medium flex-shrink-0"
-          >
-            ♪
-          </Badge>
-        </div>
-      </CardContent>
-    </Card>
+            <motion.div
+              variants={musicIconPulse}
+              animate="animate"
+              whileHover={{ scale: 1.2 }}
+              whileTap={{ scale: 0.9 }}
+            >
+              <Badge
+                variant="secondary"
+                className="text-xs px-1.5 py-0.5 bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 border-0 font-medium flex-shrink-0"
+              >
+                ♪
+              </Badge>
+            </motion.div>
+          </div>
+        </CardContent>
+      </Card>
+    </motion.div>
   );
 }
