@@ -1,6 +1,7 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { ProjectCard } from "@/components/shared/project-card";
+import { SpotifyNowPlaying } from "@/components/shared/spotify";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DATA } from "@/data/resume";
@@ -45,6 +46,9 @@ export default function Home() {
           <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
             {DATA.summary}
           </Markdown>
+        </BlurFade>
+        <BlurFade delay={BLUR_FADE_DELAY * 3.5}>
+          <SpotifyNowPlaying />
         </BlurFade>
       </section>
       <section id="projects">
