@@ -96,7 +96,7 @@ export function SpotifyNowPlaying() {
 
   if (loading) {
     return (
-      <Card className="w-full max-w-xs">
+      <Card className="w-full max-w-xs mt-8">
         <CardContent className="p-2">
           <div className="flex items-center gap-2">
             <Skeleton className="h-8 w-8 rounded flex-shrink-0" />
@@ -127,7 +127,7 @@ export function SpotifyNowPlaying() {
 
   if (!data || !data.is_playing || !data.item) {
     return (
-      <Card className="w-full max-w-xs hidden">
+      <Card className="w-full mt-8 max-w-xs border-green-200 bg-green-50/50 hover:bg-green-50/80 dark:border-green-800 dark:bg-green-950/30 dark:hover:bg-green-950/50 transition-all duration-300 group">
         <CardContent className="p-2">
           <div className="flex items-center gap-2 text-muted-foreground">
             <motion.div variants={musicIconVariants} animate="animate">

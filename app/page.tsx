@@ -1,16 +1,29 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
+import { DailyAverage } from "@/components/shared/daily-average";
+import { DevTools } from "@/components/shared/dev-tool";
 import { ProjectCard } from "@/components/shared/project-card";
 import { SpotifyNowPlaying } from "@/components/shared/spotify";
+import { TopLanguages } from "@/components/shared/top-language";
+import { TopProjects } from "@/components/shared/top-project";
+import { TotalCodingTime } from "@/components/shared/total-coding-time";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { DATA } from "@/data/resume";
+import { getWakatimeStatsAndProjects } from "@/lib/wakastat";
+import { Calendar } from "lucide-react";
 import Image from "next/image";
 import Markdown from "react-markdown";
 
 const BLUR_FADE_DELAY = 0.04;
 
-export default function Home() {
+export default async function Home() {
+  let wakatimeData;
+  try {
+    wakatimeData = await getWakatimeStatsAndProjects();
+  } catch (e) {
+    return <div className="text-red-500">Failed to load WakaTime stats.</div>;
+  }
   return (
     <main className="flex min-h-screen flex-col gap-6 px-6 md:px-0">
       <section id="hero">
@@ -47,8 +60,47 @@ export default function Home() {
             {DATA.summary}
           </Markdown>
         </BlurFade>
-        <BlurFade delay={BLUR_FADE_DELAY * 3.5}>
-          <SpotifyNowPlaying />
+        <BlurFade
+          delay={BLUR_FADE_DELAY * 3.5}
+          className="grid grid-rows-[auto_auto_auto] gap-4"
+        >
+          <div className="grid grid-cols-2 gap-2 md:gap-0 items-center">
+            <SpotifyNowPlaying />
+            <DailyAverage
+              averageHours={wakatimeData.averageHours}
+              averageMinutes={wakatimeData.averageMinutes}
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2 md:gap-0 items-center">
+            <TopLanguages languages={wakatimeData.languages} />
+            <TotalCodingTime totalHours={wakatimeData.totalHours} />
+          </div>
+          <div className="grid grid-cols-2 gap-2 md:gap-0 items-center">
+            <TopProjects projects={wakatimeData.projects} />
+            <DevTools
+              editor={wakatimeData.devTools?.editor}
+              os={wakatimeData.devTools?.os}
+            />
+          </div>
+
+          <div className="flex items-center justify-center gap-2 pt-4">
+          <Calendar className="h-3 w-3 text-muted-foreground" />
+          <h2 className="text-xs leading-relaxed text-muted-foreground">
+            WakaTime installed since{" "}
+            <span className="relative inline-block px-1">
+              <span className="relative z-10 text-foreground font-medium">16 June 2025</span>
+              <span
+                className="absolute inset-0 bg-yellow-300/60 dark:bg-yellow-400/40 transform rotate-1"
+                style={{
+                  clipPath:
+                    "polygon(0% 20%, 5% 0%, 95% 5%, 100% 25%, 95% 45%, 100% 65%, 95% 85%, 90% 100%, 10% 95%, 0% 75%)",
+                  height: "120%",
+                  top: "-10%",
+                }}
+              />
+            </span>
+          </h2>
+        </div>
         </BlurFade>
       </section>
       <section id="projects">

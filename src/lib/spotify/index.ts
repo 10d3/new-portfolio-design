@@ -50,7 +50,7 @@ async function refreshUserAccessToken() {
   }
 
   const data = await response.json();
-  console.log("✅ Token refresh successful!");
+  // console.log("✅ Token refresh successful!");
   USER_ACCESS_TOKEN = data.access_token;
 
   // Refresh token might be updated
