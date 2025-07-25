@@ -1,6 +1,7 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
 import { DailyAverage } from "@/components/shared/daily-average";
+import { DataRangeIndicator } from "@/components/shared/data-range-indicator";
 import { DevTools } from "@/components/shared/dev-tool";
 import { ProjectCard } from "@/components/shared/project-card";
 import { SpotifyNowPlaying } from "@/components/shared/spotify";
@@ -17,11 +18,15 @@ import Markdown from "react-markdown";
 
 const BLUR_FADE_DELAY = 0.04;
 
+// Add revalidation to ensure stats update regularly
+export const revalidate = 3600; // Revalidate every hour
+
 export default async function Home() {
   let wakatimeData;
   try {
     wakatimeData = await getWakatimeStatsAndProjects();
   } catch (e) {
+    console.error("Failed to load WakaTime stats:", e);
     return <div className="text-red-500">Failed to load WakaTime stats.</div>;
   }
   return (
@@ -84,23 +89,8 @@ export default async function Home() {
           </div>
 
           <div className="flex items-center justify-center gap-2 pt-4">
-          <Calendar className="h-3 w-3 text-muted-foreground" />
-          <h2 className="text-xs leading-relaxed text-muted-foreground">
-            WakaTime installed since{" "}
-            <span className="relative inline-block px-1">
-              <span className="relative z-10 text-foreground font-medium">16 June 2025</span>
-              <span
-                className="absolute inset-0 bg-yellow-300/60 dark:bg-yellow-400/40 transform rotate-1"
-                style={{
-                  clipPath:
-                    "polygon(0% 20%, 5% 0%, 95% 5%, 100% 25%, 95% 45%, 100% 65%, 95% 85%, 90% 100%, 10% 95%, 0% 75%)",
-                  height: "120%",
-                  top: "-10%",
-                }}
-              />
-            </span>
-          </h2>
-        </div>
+            <DataRangeIndicator dataRange={wakatimeData.dataRange} />
+          </div>
         </BlurFade>
       </section>
       <section id="projects">
