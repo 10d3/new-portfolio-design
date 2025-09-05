@@ -6,7 +6,7 @@ interface DataRangeIndicatorProps {
 }
 
 export function DataRangeIndicator({
-  dataRange = "last_7_days",
+  dataRange = "this_week",
   className = "",
 }: DataRangeIndicatorProps) {
   const getRangeText = (range: string) => {
