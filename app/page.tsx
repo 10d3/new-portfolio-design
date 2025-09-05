@@ -89,7 +89,7 @@ export default async function Home() {
           </div>
 
           <div className="flex items-center justify-center gap-2 pt-4">
-            <DataRangeIndicator dataRange={wakatimeData.dataRange} />
+            <DataRangeIndicator dataRange={"this_week"} />
           </div>
         </BlurFade>
       </section>
