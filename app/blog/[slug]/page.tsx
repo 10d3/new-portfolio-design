@@ -5,17 +5,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import "../../../styles/mdx.css";
-import Link from "next/link";
-import { useTheme } from "next-themes";
 
 export async function generateMetadata({
   params,
 }: {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }): Promise<Metadata | undefined> {
-  let post = await getPost(params.slug);
+  const { slug } = await params;
+  let post = await getPost(slug);
 
   let {
     title,
@@ -23,7 +22,9 @@ export async function generateMetadata({
     summary: description,
     image,
   } = post.metadata;
-  let ogImage = image ? `${DATA.url}/${image}` : `${DATA.url}/og?title=${title}`;
+  let ogImage = image
+    ? `${DATA.url}/${image}`
+    : `${DATA.url}/og?title=${title}`;
 
   return {
     title,
@@ -57,16 +58,16 @@ export async function generateMetadata({
 export default async function Blog({
   params,
 }: {
-  params: {
+  params: Promise<{
     slug: string;
-  };
+  }>;
 }) {
-  let post = await getPost(params.slug);
+  const { slug } = await params;
+  let post = await getPost(slug);
 
   if (!post) {
     notFound();
   }
-
 
   return (
     <section
