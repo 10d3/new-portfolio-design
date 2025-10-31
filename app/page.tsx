@@ -84,7 +84,7 @@ export default async function Home() {
             <TopProjects projects={wakatimeData.projects} />
             <DevTools
               editor={wakatimeData.devTools?.editor}
-              os={wakatimeData.devTools?.os}
+              os={wakatimeData.devTools?.machine}
             />
           </div>
 

@@ -11,7 +11,7 @@ export const DATA = {
   description:
     "Full-Stack developer. I'm passionate about building things and helping people.",
   summary:
-    "I'm a builder at heart, passionate about creating SaaS solutions that solve real problems and make a difference. From coding to designing, I thrive on bringing ideas to life and watching them grow. As a remote worker, I focus on building innovative tools that truly impact lives—often with my cat nearby (though not yet a coding buddy)!",
+    "I'm a builder at heart, passionate about creating SaaS solutions that solve real problems and make a difference. From coding to designing, I thrive on bringing ideas to life and watching them grow. As a remote worker, I focus on building innovative tools that truly impact lives—often. ( I use Arch btw )",
   avatarUrl: "/me.png",
   skills: [
     "React",
@@ -58,12 +58,12 @@ export const DATA = {
 
         navbar: true,
       },
-        Youtube: {
-          name: "Youtube",
-          url: "https://www.youtube.com/@amherley",
-          icon: Icons.youtube,
-          navbar: true,
-        },
+      Youtube: {
+        name: "Youtube",
+        url: "https://www.youtube.com/@amherley",
+        icon: Icons.youtube,
+        navbar: true,
+      },
       email: {
         name: "Send Email",
         url: "mailto:marcherleyantoine@gmail.com",
@@ -236,7 +236,7 @@ export const DATA = {
         "Bullmq",
         "Redis",
         "JsonWebToken",
-        "Python"
+        "Python",
       ],
       links: [
         // {
@@ -307,7 +307,7 @@ export const DATA = {
         "PostgreSQL",
         "Auth.js",
         "JSON Web Tokens (JWT)",
-        "Typescript"
+        "Typescript",
       ],
       links: [
         {

@@ -1,9 +1,9 @@
 /**
  * WakaTime Integration for Portfolio
- * 
+ *
  * Note: Free WakaTime accounts only provide access to the last 7 days of data.
  * All stats (total hours, projects, languages) reflect this 7-day period only.
- * 
+ *
  * For historical data beyond 7 days, a WakaTime premium subscription is required.
  */
 
@@ -24,7 +24,7 @@ export interface WakatimeLanguage {
 
 export interface WakatimeDevTools {
   editor: string;
-  os: string;
+  machine: string;
 }
 
 export interface WakatimeStats {
@@ -67,7 +67,7 @@ function parseTokensFromEnv() {
     hasRefreshToken: !!refreshToken,
     hasExpiresAt: !!expiresAt,
     expiresAt: expiresAt,
-    isExpired: expiresAt ? isTokenExpired(expiresAt) : "unknown"
+    isExpired: expiresAt ? isTokenExpired(expiresAt) : "unknown",
   });
 
   return { accessToken, refreshToken, expiresAt };
@@ -250,6 +250,26 @@ export async function fetchWakatimeSummaries(
   return data;
 }
 
+export async function fetchWakatimeMachines(accessToken: string) {
+  console.log("Fetching WakaTime machines...");
+  const response = await fetch(
+    "https://wakatime.com/api/v1/users/current/machine_names",
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    }
+  );
+  if (!response.ok) {
+    const errorText = await response.text();
+    console.error("WakaTime machines API error:", response.status, errorText);
+    throw new Error(`WakaTime API error: ${response.status} - ${errorText}`);
+  }
+  const data = await response.json();
+  console.log("WakaTime machines fetched successfully");
+  return data;
+}
+
 export function parseWakatimeStats(
   stats: any
 ): Omit<WakatimeStats, "projects" | "devTools"> {
@@ -270,12 +290,12 @@ export function parseWakatimeStats(
   // Add data range information for free accounts
   const dataRange = stats?.data?.range || "last_7_days";
 
-  return { 
-    averageHours, 
-    averageMinutes, 
-    languages, 
+  return {
+    averageHours,
+    averageMinutes,
+    languages,
     totalHours,
-    dataRange 
+    dataRange,
   };
 }
 
@@ -360,13 +380,13 @@ export function parseWakatimeProjects(summaries: any): WakatimeProject[] {
 
 export function parseWakatimeDevTools(summaries: any): WakatimeDevTools {
   if (!summaries?.data || summaries.data.length === 0) {
-    return { editor: "VS Code", os: "Unknown" };
+    return { editor: "VS Code", machine: "Unknown" };
   }
 
   const editorMap = new Map();
-  const osMap = new Map();
+  const machineMap = new Map();
 
-  // Aggregate editor and OS data from all days in the summary
+  // Aggregate editor and machine data from all days in the summary
   summaries.data.forEach((day: any) => {
     // Count editors
     if (day.editors) {
@@ -381,15 +401,15 @@ export function parseWakatimeDevTools(summaries: any): WakatimeDevTools {
       });
     }
 
-    // Count operating systems
-    if (day.operating_systems) {
-      day.operating_systems.forEach((os: any) => {
-        const name = os.name;
-        const seconds = os.total_seconds || 0;
-        if (osMap.has(name)) {
-          osMap.set(name, osMap.get(name) + seconds);
+    // Count machines
+    if (day.machines) {
+      day.machines.forEach((machine: any) => {
+        const name = machine.name;
+        const seconds = machine.total_seconds || 0;
+        if (machineMap.has(name)) {
+          machineMap.set(name, machineMap.get(name) + seconds);
         } else {
-          osMap.set(name, seconds);
+          machineMap.set(name, seconds);
         }
       });
     }
@@ -405,35 +425,19 @@ export function parseWakatimeDevTools(summaries: any): WakatimeDevTools {
     }
   });
 
-  // Get the most used OS
-  let topOS = "Unknown";
-  let maxOSSeconds = 0;
-  osMap.forEach((seconds, name) => {
-    if (seconds > maxOSSeconds) {
-      maxOSSeconds = seconds;
-      topOS = name;
+  // Get the most used machine
+  let topMachine = "Unknown";
+  let maxMachineSeconds = 0;
+  machineMap.forEach((seconds, name) => {
+    if (seconds > maxMachineSeconds) {
+      maxMachineSeconds = seconds;
+      topMachine = name;
     }
   });
 
-  // Clean up OS names for better display
-  const cleanOSName = (osName: string): string => {
-    const osMap: Record<string, string> = {
-      Mac: "macOS",
-      macOS: "macOS",
-      Windows: "Windows",
-      "Windows 10": "Windows",
-      "Windows 11": "Windows",
-      Linux: "Linux",
-      Ubuntu: "Ubuntu",
-      Unix: "Unix",
-    };
-
-    return osMap[osName] || osName;
-  };
-
   return {
     editor: topEditor,
-    os: cleanOSName(topOS),
+    machine: topMachine,
   };
 }
 
