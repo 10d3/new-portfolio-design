@@ -1,63 +1,64 @@
-FROM node:20-alpine AS base
+# syntax=docker/dockerfile:1
+FROM node:alpine AS base
+# Install system dependencies
+RUN apk add --no-cache \
+    openssl \
+    curl \
+    libc6-compat
+# Enable pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Install pnpm
-ENV PNPM_HOME="/pnpm"
-ENV PATH="$PNPM_HOME:$PATH"
-RUN corepack enable
-
-# Install dependencies only when needed
+# Dependencies stage
 FROM base AS deps
-RUN apk add --no-cache libc6-compat
 WORKDIR /app
+# Copy dependency files
+COPY package.json pnpm-lock.yaml ./
+# Install dependencies with cache mount for better performance
+RUN --mount=type=cache,id=pnpm,target=/root/.local/share/pnpm/store \
+    pnpm install --frozen-lockfile --prefer-offline
 
-# Copy package files
-COPY package.json pnpm-lock.yaml* ./
-
-# Install dependencies
-RUN pnpm install --frozen-lockfile
-
-# Rebuild the source code only when needed
+# Builder stage  
 FROM base AS builder
 WORKDIR /app
+# Copy package.json and installed dependencies
+COPY package.json pnpm-lock.yaml ./
 COPY --from=deps /app/node_modules ./node_modules
+# Copy source code
 COPY . .
-
-# Disable telemetry during build
-ENV NEXT_TELEMETRY_DISABLED=1
-
 # Build the application
-RUN pnpm build
+ENV NEXT_TELEMETRY_DISABLED=1
+RUN pnpm run build
 
-# Production image, copy all the files and run next
+# Production stage
 FROM base AS runner
 WORKDIR /app
-
+# Set production environment
 ENV NODE_ENV=production
+ENV PORT=3000
+ENV HOSTNAME=0.0.0.0
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+# Create non-root user with specific IDs for better security
+RUN addgroup --system --gid 1001 nodejs && \
+    adduser --system --uid 1001 nextjs --ingroup nodejs
 
-COPY --from=builder /app/public ./public
-
-# Set the correct permission for prerender cache
-RUN mkdir .next
-RUN chown nextjs:nodejs .next
-
-# Automatically leverage output traces to reduce image size
+# Copy built application with proper ownership
+COPY --from=builder --chown=nextjs:nodejs /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# Copy generated Prisma client from custom location
+COPY --from=builder --chown=nextjs:nodejs /app/lib/generated ./lib/generated
+
+# Switch to non-root user
 USER nextjs
 
 # Add healthcheck with more realistic timing
 HEALTHCHECK --interval=60s --timeout=10s --start-period=30s --retries=3 \
     CMD curl -f http://localhost:3000/api/health || exit 1
 
-
+# Expose port
 EXPOSE 3000
 
-ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
-
+# Start the application
 CMD ["node", "server.js"]
