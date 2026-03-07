@@ -1,19 +1,19 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import BlurFadeText from "@/components/magicui/blur-fade-text";
-import { DailyAverage } from "@/components/shared/daily-average";
-import { DataRangeIndicator } from "@/components/shared/data-range-indicator";
-import { DevTools } from "@/components/shared/dev-tool";
+// import { DailyAverage } from "@/components/shared/daily-average";
+// import { DataRangeIndicator } from "@/components/shared/data-range-indicator";
+// import { DevTools } from "@/components/shared/dev-tool";
 import { ProjectCard } from "@/components/shared/project-card";
-import { SpotifyNowPlaying } from "@/components/shared/spotify";
-import { TopLanguages } from "@/components/shared/top-language";
-import { TopProjects } from "@/components/shared/top-project";
-import { TotalCodingTime } from "@/components/shared/total-coding-time";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
+// import { SpotifyNowPlaying } from "@/components/shared/spotify";
+// import { TopLanguages } from "@/components/shared/top-language";
+// import { TopProjects } from "@/components/shared/top-project";
+// import { TotalCodingTime } from "@/components/shared/total-coding-time";
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+// import { Button } from "@/components/ui/button";
 import { DATA } from "@/data/resume";
-import { getWakatimeStatsAndProjects } from "@/lib/wakastat";
-import { Calendar } from "lucide-react";
-import Image from "next/image";
+// import { getWakatimeStatsAndProjects } from "@/lib/wakastat";
+// import { Calendar } from "lucide-react";
+// import Image from "next/image";
 import Markdown from "react-markdown";
 
 const BLUR_FADE_DELAY = 0.04;
@@ -22,13 +22,6 @@ const BLUR_FADE_DELAY = 0.04;
 export const revalidate = 3600; // Revalidate every hour
 
 export default async function Home() {
-  let wakatimeData;
-  try {
-    wakatimeData = await getWakatimeStatsAndProjects();
-  } catch (e) {
-    console.error("Failed to load WakaTime stats:", e);
-    return <div className="text-red-500">Failed to load WakaTime stats.</div>;
-  }
   return (
     <main className="flex min-h-screen flex-col gap-6 px-6 md:px-0">
       <section id="hero">
@@ -64,33 +57,6 @@ export default async function Home() {
           <Markdown className="prose max-w-full text-pretty font-sans text-sm text-muted-foreground dark:prose-invert">
             {DATA.summary}
           </Markdown>
-        </BlurFade>
-        <BlurFade
-          delay={BLUR_FADE_DELAY * 3.5}
-          className="grid grid-rows-[auto_auto_auto] gap-4"
-        >
-          <div className="grid grid-cols-2 gap-2 md:gap-0 items-center">
-            <SpotifyNowPlaying />
-            <DailyAverage
-              averageHours={wakatimeData.averageHours}
-              averageMinutes={wakatimeData.averageMinutes}
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2 md:gap-0 items-center">
-            <TopLanguages languages={wakatimeData.languages} />
-            <TotalCodingTime totalHours={wakatimeData.totalHours} />
-          </div>
-          <div className="grid grid-cols-2 gap-2 md:gap-0 items-center">
-            <TopProjects projects={wakatimeData.projects} />
-            <DevTools
-              editor={wakatimeData.devTools?.editor}
-              os={wakatimeData.devTools?.machine}
-            />
-          </div>
-
-          <div className="flex items-center justify-center gap-2 pt-4">
-            <DataRangeIndicator dataRange={"this_week"} />
-          </div>
         </BlurFade>
       </section>
       <section id="projects">
