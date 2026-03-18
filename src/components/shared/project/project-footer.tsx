@@ -1,3 +1,4 @@
+import { DATA } from "@/data/resume"
 import { Project } from "@/db/schema"
 import { ArrowUpRight } from "lucide-react"
 
@@ -18,7 +19,7 @@ export function ProjectFooter({ project }: ProjectFooterProps) {
           </p>
         </div>
         <a
-          href="mailto:hello@example.com"
+          href={`mailto:${DATA.contact.email}`}
           className="inline-flex items-center gap-2 text-sm font-medium text-foreground border-b border-foreground/30 hover:border-foreground pb-0.5 transition-colors duration-200 group"
         >
           Get in touch

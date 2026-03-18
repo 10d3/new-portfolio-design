@@ -6,6 +6,7 @@ import { formatDate } from "@/lib/utils";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import "@/components/shared/blog/editor-block-styles.css";
+import { Editor } from "@/components/shared/blog/editor";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -94,10 +95,7 @@ export default async function BlogPostPage({ params }: Props) {
       </div>
 
       {/* Render the HTML produced by the Tiptap editor */}
-      <article
-        className="editor-root editor-surface editor-content prose max-w-full dark:prose-invert"
-        dangerouslySetInnerHTML={{ __html: post.content ?? "" }}
-      />
+      <Editor content={post.content ?? ""} isReadOnly />
     </section>
   );
 }

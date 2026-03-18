@@ -139,7 +139,7 @@ export const Editor = ({
   }
   return (
     <div
-      className={`editor-root relative w-full rounded-lg border border-border bg-card overflow-hidden ${!isReadOnly ? "" : ""
+      className={`editor-root relative w-full rounded-lg bg-card overflow-hidden ${!isReadOnly ? "border border-border" : "px-0 mx-0"
         }`}
     >
       {!isReadOnly && <div className="flex items-center gap-2 border-b border-border px-4 py-2">

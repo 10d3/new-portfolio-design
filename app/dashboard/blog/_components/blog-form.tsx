@@ -71,24 +71,30 @@ export function BlogForm({ post }: BlogFormProps) {
       publishedAt: form.published ? new Date().toISOString() : null,
     };
 
-    const res = await fetch(
-      isNew ? "/api/posts" : `/api/posts/${post.id}`,
-      {
-        method: isNew ? "POST" : "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+    try {
+      const res = await fetch(
+        isNew ? "/api/posts" : `/api/posts/${post.id}`,
+        {
+          method: isNew ? "POST" : "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Something went wrong");
+        return;
       }
-    );
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Something went wrong");
+      router.push("/dashboard/blog");
+      router.refresh();
+    } catch (err) {
+      console.error("Save error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/dashboard/blog");
-    router.refresh();
   }
 
   return (

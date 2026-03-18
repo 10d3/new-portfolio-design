@@ -39,24 +39,22 @@ function HighlightBlock({
 }
 
 export function ProjectHighlights({ project }: ProjectHighlightsProps) {
-  const challenges = project.challenges ?? []
-  const outcomes = project.outcomes ?? []
-  if (!challenges.length && !outcomes.length) return null
+  if (!project.challenges?.length && !project.outcomes?.length) return null
 
   return (
-    <section className="my-16 p-8 md:p-10 rounded-sm border border-border bg-card">
-      <div className="flex flex-col md:flex-row gap-10 md:gap-16">
+    <section className="my-16 p-6 sm:p-8 rounded-sm border border-border bg-card">
+      <div className="flex flex-col gap-10">
         <HighlightBlock
           label="Challenges"
-          items={challenges}
+          items={project.challenges ?? []}
           variant="challenges"
         />
-        {challenges.length > 0 && outcomes.length > 0 && (
-          <div className="hidden md:block w-px bg-border shrink-0" />
+        {(project.challenges?.length ?? 0) > 0 && (project.outcomes?.length ?? 0) > 0 && (
+          <div className="h-px bg-border w-full" />
         )}
         <HighlightBlock
           label="Outcomes"
-          items={outcomes}
+          items={project.outcomes ?? []}
           variant="outcomes"
         />
       </div>

@@ -197,23 +197,29 @@ export function ProjectForm({ project }: ProjectFormProps) {
         .filter(Boolean),
     };
 
-    const res = await fetch(
-      isNew ? "/api/projects" : `/api/projects/${project!.id}`,
-      {
-        method: isNew ? "POST" : "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+    try {
+      const res = await fetch(
+        isNew ? "/api/projects" : `/api/projects/${project!.id}`,
+        {
+          method: isNew ? "POST" : "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? "Something went wrong.");
+        return;
       }
-    );
 
-    if (!res.ok) {
-      const data = await res.json().catch(() => ({}));
-      setError(data.error ?? "Something went wrong.");
+      // Saved — optionally redirect or show success
+    } catch (err) {
+      console.error("Save error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // router.push("/dashboard/projects");
   }
 
   return (

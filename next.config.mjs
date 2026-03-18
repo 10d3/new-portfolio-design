@@ -7,6 +7,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "i.scdn.co",
         pathname: "**"
+      },
+      {
+        protocol: "https",
+        hostname: "cuajuep66z.ufs.sh",
+        pathname: "**"
       }
     ]
   },
