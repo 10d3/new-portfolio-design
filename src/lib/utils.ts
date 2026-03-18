@@ -13,6 +13,8 @@ export function formatDate(date: string): string {
         day: "numeric",
     });
 }
+/** Base URL for the site — used in sitemaps, OG tags, etc. */
+export const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "https://amherley.dev";
 
 export function isValidUrl(url: string): boolean {
     try {

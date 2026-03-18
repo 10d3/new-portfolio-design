@@ -99,7 +99,7 @@ export const VariableMenu = forwardRef<VarMenuHandle, VarMenuProps>(
                         <span className="var-menu-body">
                             <span className="var-menu-label">{item.label}</span>
                             {item.example && (
-                                <span className="var-menu-example">e.g. "{item.example}"</span>
+                                <span className="var-menu-example">{'"'}{item.example}{'"'}</span>
                             )}
                         </span>
                     </button>
