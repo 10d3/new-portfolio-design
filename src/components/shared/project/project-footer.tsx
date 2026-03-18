@@ -1,5 +1,5 @@
+import { Project } from "@/db/schema"
 import { ArrowUpRight } from "lucide-react"
-import type { Project } from "@/lib/project-data"
 
 interface ProjectFooterProps {
   project: Project

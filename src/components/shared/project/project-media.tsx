@@ -2,7 +2,7 @@
 
 import { useState } from "react"
 import Image from "next/image"
-import type { Project } from "@/lib/project-data"
+import { Project } from "@/db/schema"
 import { Play } from "lucide-react"
 import { cn } from "@/lib/utils"
 

@@ -1,11 +1,11 @@
-import type { Project } from "@/lib/project-data"
+import { Project } from "@/db/schema"
 
 interface ProjectTechProps {
   project: Project
 }
 
 export function ProjectTech({ project }: ProjectTechProps) {
-  if (!project.technologies.length) return null
+  if (!project?.technologies?.length) return null
 
   return (
     <section className="mb-16">

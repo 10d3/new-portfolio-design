@@ -1,4 +1,4 @@
-import type { Project } from "@/lib/project-data"
+import { Project } from "@/db/schema"
 
 interface ProjectMetaProps {
   project: Project
@@ -19,9 +19,9 @@ export function ProjectMeta({ project }: ProjectMetaProps) {
   return (
     <aside className="w-full">
       <dl className="border-t border-border divide-y-0">
-        <MetaItem label="Role" value={project.role} />
+        <MetaItem label="Role" value={project.role as string} />
         <MetaItem label="Team Size" value={`${project.teamSize} Engineers`} />
-        <MetaItem label="Timeline" value={project.dates} />
+        <MetaItem label="Timeline" value={project.dates as string} />
         <MetaItem label="Status" value={project.active ? "Active / In Production" : "Archived"} />
       </dl>
     </aside>
