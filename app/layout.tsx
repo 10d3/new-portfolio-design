@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import Providers from "./Providers";
-import Navbar from "@/components/layout/Navbar";
 import { cn } from "@/lib/utils";
 import Script from 'next/script';
 
@@ -75,7 +74,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "flex flex-col gap-12 max-w-2xl mx-auto",
+          "min-h-screen",
           inter.className
         )}
       >
@@ -93,7 +92,6 @@ export default function RootLayout({
         </Script>
 
         <Providers>
-          <Navbar />
           {children}
         </Providers>
       </body>

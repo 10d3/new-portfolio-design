@@ -1,0 +1,770 @@
+/* ─────────────────────────────────────────────────────────────
+   editor-block-styles.css  ·  Apple-inspired Tiptap styles
+   ───────────────────────────────────────────────────────────── */
+
+/* ── Toolbar design tokens ───────────────────────────────────── */
+
+:root {
+    --toolbar-bg: oklch(1 0 0 / 85%);
+    --toolbar-border: oklch(0 0 0 / 8%);
+    --toolbar-shadow:
+        0 4px 24px -4px oklch(0 0 0 / 10%),
+        0 1px 4px oklch(0 0 0 / 6%);
+    --toolbar-hover-bg: oklch(0 0 0 / 5%);
+    --toolbar-active-bg: oklch(0.205 0 0);
+    --toolbar-active-fg: oklch(0.985 0 0);
+    --toolbar-separator: oklch(0 0 0 / 10%);
+}
+
+.dark {
+    --toolbar-bg: oklch(0.22 0 0 / 85%);
+    --toolbar-border: oklch(1 0 0 / 10%);
+    --toolbar-shadow:
+        0 4px 24px -4px oklch(0 0 0 / 30%),
+        0 1px 4px oklch(0 0 0 / 20%);
+    --toolbar-hover-bg: oklch(1 0 0 / 8%);
+    --toolbar-active-bg: oklch(0.92 0 0);
+    --toolbar-active-fg: oklch(0.18 0 0);
+    --toolbar-separator: oklch(1 0 0 / 12%);
+}
+
+/* ── Slash Command Menu ────────────────────────────────────────── */
+
+.slash-command-menu {
+    min-width: 240px;
+    max-width: 280px;
+    max-height: 340px;
+    overflow-y: auto;
+    border-radius: 14px;
+    padding: 4px;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--toolbar-border);
+    box-shadow: var(--toolbar-shadow);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    animation: menu-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top left;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.slash-command-menu::-webkit-scrollbar {
+    display: none;
+}
+
+.slash-command-menu-header {
+    padding: 4px 10px 2px;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-muted-foreground);
+    -webkit-font-smoothing: antialiased;
+    opacity: 0.7;
+}
+
+.slash-command-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 7px 8px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: 13px;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s;
+    -webkit-font-smoothing: antialiased;
+}
+
+.slash-command-item:hover:not(.slash-command-item--active) {
+    background: var(--toolbar-hover-bg);
+}
+
+.slash-command-item--active {
+    background: var(--toolbar-active-bg);
+    color: var(--toolbar-active-fg);
+}
+
+.slash-command-item-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 30px;
+    height: 30px;
+    border-radius: 7px;
+    background: var(--toolbar-hover-bg);
+    border: 1px solid var(--toolbar-separator);
+    color: var(--color-foreground);
+    transition: background 0.1s, border-color 0.1s;
+}
+
+.slash-command-item--active .slash-command-item-icon {
+    background: color-mix(in oklch, var(--toolbar-active-fg) 15%, transparent);
+    border-color: color-mix(in oklch, var(--toolbar-active-fg) 20%, transparent);
+    color: var(--toolbar-active-fg);
+}
+
+.slash-command-item-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1px;
+    min-width: 0;
+}
+
+.slash-command-item-title {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slash-command-item-description {
+    font-size: 11px;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.slash-command-item--active .slash-command-item-description {
+    color: color-mix(in oklch, var(--toolbar-active-fg) 70%, transparent);
+}
+
+/* ── Block Handle ──────────────────────────────────────────────── */
+
+.block-handle-container {
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 1px;
+    z-index: 50;
+    opacity: 0;
+    transition: opacity 0.15s ease;
+    padding-top: 2px;
+}
+
+.block-handle-visible {
+    opacity: 1;
+}
+
+.block-handle-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.25rem;
+    height: 1.5rem;
+    border: none;
+    border-radius: 0.25rem;
+    background: transparent;
+    color: var(--color-muted-foreground);
+    cursor: pointer;
+    transition: all 0.15s ease;
+    padding: 0;
+}
+
+.block-handle-button:hover {
+    background: var(--toolbar-hover-bg);
+    color: var(--color-foreground);
+}
+
+.block-handle-drag {
+    cursor: grab;
+}
+
+.block-handle-drag:active {
+    cursor: grabbing;
+}
+
+/* ── Block Drop Indicator ──────────────────────────────────────── */
+
+.block-drop-indicator {
+    height: 2px;
+    background: var(--color-primary);
+    border-radius: 1px;
+    margin: 1px 0;
+    pointer-events: none;
+}
+
+/* ── Block Drag Preview ────────────────────────────────────────── */
+
+.block-drag-preview {
+    position: fixed;
+    top: -1000px;
+    left: -1000px;
+    padding: 0.375rem 0.75rem;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--toolbar-border);
+    border-radius: 8px;
+    box-shadow: var(--toolbar-shadow);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    font-size: 0.8125rem;
+    color: var(--color-foreground);
+    max-width: 200px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    z-index: 9999;
+    pointer-events: none;
+}
+
+/* ── Floating Toolbar ──────────────────────────────────────────── */
+
+.floating-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5px;
+    padding: 0.25rem 0.375rem;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--toolbar-border);
+    border-radius: 12px;
+    box-shadow: var(--toolbar-shadow);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    animation: toolbar-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: center bottom;
+    z-index: 50;
+}
+
+.floating-toolbar-separator {
+    width: 1px;
+    height: 1rem;
+    margin: 0 0.125rem;
+    background: var(--toolbar-separator);
+    flex-shrink: 0;
+}
+
+.floating-toolbar-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: none;
+    border-radius: 0.375rem;
+    background: transparent;
+    color: var(--color-foreground);
+    cursor: pointer;
+    transition: all 0.1s ease;
+    -webkit-font-smoothing: antialiased;
+}
+
+.floating-toolbar-button:hover {
+    background: var(--toolbar-hover-bg);
+}
+
+.floating-toolbar-button--active {
+    background: var(--toolbar-active-bg);
+    color: var(--toolbar-active-fg);
+}
+
+.floating-toolbar-button:disabled {
+    opacity: 0.35;
+    pointer-events: none;
+}
+
+/* ── Heading Picker (inside floating toolbar) ────────────────── */
+
+.heading-picker {
+    position: absolute;
+    top: calc(100% + 6px);
+    left: 0;
+    z-index: 9999;
+    min-width: 172px;
+    border-radius: 12px;
+    padding: 4px;
+    background: var(--toolbar-bg);
+    border: 1px solid var(--toolbar-border);
+    box-shadow: var(--toolbar-shadow);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
+    animation: menu-in 0.14s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top left;
+}
+
+.heading-picker-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    padding: 6px 8px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    color: var(--color-foreground);
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: -0.01em;
+    cursor: pointer;
+    text-align: left;
+    transition: background 0.1s;
+    -webkit-font-smoothing: antialiased;
+}
+
+.heading-picker-item:hover:not(.heading-picker-item--active) {
+    background: var(--toolbar-hover-bg);
+}
+
+.heading-picker-item--active {
+    background: var(--toolbar-active-bg) !important;
+    color: var(--toolbar-active-fg) !important;
+    font-weight: 500;
+}
+
+/* ── Placeholder Styles ────────────────────────────────────────── */
+
+.tiptap p.is-editor-empty:first-child::before {
+    color: var(--color-muted-foreground);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+.tiptap p.is-empty::before {
+    color: var(--color-muted-foreground);
+    content: attr(data-placeholder);
+    float: left;
+    height: 0;
+    pointer-events: none;
+    opacity: 0.4;
+}
+
+/* ── Animations ────────────────────────────────────────────────── */
+
+@keyframes toolbar-in {
+    from {
+        opacity: 0;
+        transform: scale(0.92) translateY(4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+@keyframes menu-in {
+    from {
+        opacity: 0;
+        transform: scale(0.94) translateY(-4px);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1) translateY(0);
+    }
+}
+
+/* ── Tippy.js Overrides ────────────────────────────────────────── */
+
+.tippy-box {
+    padding: 0 !important;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+}
+
+.tippy-content {
+    padding: 0 !important;
+}
+
+.tippy-arrow {
+    display: none !important;
+}
+
+.editor-content .ProseMirror ul,
+.editor-content .ProseMirror ol {
+    padding-left: 1.5rem;
+    margin-bottom: 0.875rem;
+}
+
+.editor-content .ProseMirror ul {
+    list-style-type: disc;
+}
+
+.editor-content .ProseMirror ol {
+    list-style-type: decimal;
+}
+
+.editor-content .ProseMirror li {
+    margin-bottom: 0.25rem;
+    padding-left: 0.25rem;
+}
+
+.editor-content .ProseMirror li p {
+    margin-bottom: 0;
+}
+
+/* ── Button node wrapper ─────────────────────────────────────── */
+
+.button-node-wrapper {
+    display: block;
+    padding: 2px 0;
+    /* make it a group so the edit chip can respond to hover */
+    position: relative;
+}
+
+/* Edit chip: hidden by default, shown on hover or when active */
+.button-node-wrapper .edit-chip {
+    opacity: 0;
+    transition: opacity 0.15s;
+    pointer-events: none;
+}
+
+.button-node-wrapper:hover .edit-chip,
+.button-node-wrapper .edit-chip.opacity-100 {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* Hidden state ghost */
+.button-node-hidden {
+    padding: 2px 0;
+}
+
+.button-node-el {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
+    font-weight: 500;
+    cursor: pointer;
+    line-height: 1;
+    transition: filter 0.15s, transform 0.1s;
+    -webkit-font-smoothing: antialiased;
+    user-select: none;
+}
+
+.button-node-el:hover {
+    filter: brightness(0.92);
+}
+
+/* ── Button editor panel ─────────────────────────────────────── */
+
+.button-editor-panel {
+    border-radius: 14px;
+    /* No padding here — sections have their own padding */
+    width: 280px;
+    max-height: 70vh;
+    overflow-y: auto;
+    overflow-x: visible;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    animation: menu-in 0.15s cubic-bezier(0.16, 1, 0.3, 1);
+    transform-origin: top left;
+    margin-top: 6px;
+}
+
+.button-editor-panel::-webkit-scrollbar {
+    display: none;
+}
+
+.button-editor-section {
+    padding: 10px 12px 10px;
+}
+
+.button-editor-input {
+    width: 100%;
+    height: 34px;
+    border-radius: 8px;
+    padding: 0 10px;
+    font-family: inherit;
+    font-size: 13px;
+    outline: none;
+    transition: border-color 0.15s;
+    -webkit-font-smoothing: antialiased;
+}
+
+.button-editor-input:focus {
+    border-color: var(--color-primary) !important;
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary) 15%, transparent);
+}
+
+/* ── Status bar ──────────────────────────────────────────────── */
+
+.editor-statusbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 2rem;
+    /* border-top: 1px solid var(--color-border); */
+    /* background: var(--color-background); */
+    position: sticky;
+    bottom: 0;
+}
+
+.editor-statusbar-badge {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--color-muted-foreground);
+    letter-spacing: 0.01em;
+}
+
+.editor-statusbar-dot {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--color-border);
+    flex-shrink: 0;
+}
+
+.editor-statusbar-hint {
+    font-size: 0.6875rem;
+    color: var(--color-muted-foreground);
+    opacity: 0.55;
+    margin-left: auto;
+}
+
+/* ── YouTube node ────────────────────────────────────────────── */
+
+.youtube-node-wrapper {
+    display: block;
+    padding: 4px 0;
+}
+
+/* ─ Input / empty state ─ */
+
+.youtube-input-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    border-radius: 14px;
+    padding: 28px 24px 20px;
+    background: var(--editor-surface, var(--color-secondary));
+    border: 1.5px dashed var(--color-border);
+    transition: border-color 0.15s;
+}
+
+.youtube-input-panel:focus-within {
+    border-color: var(--color-primary);
+}
+
+.youtube-input-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: #FF0000;
+    color: #fff;
+    flex-shrink: 0;
+}
+
+.youtube-input-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--color-muted-foreground);
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.youtube-input-form {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.youtube-input-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    height: 36px;
+    border-radius: 10px;
+    border: 1.5px solid var(--color-border);
+    background: var(--color-card);
+    overflow: hidden;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+.youtube-input-row:focus-within {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary) 14%, transparent);
+}
+
+.youtube-input-prefix {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    color: var(--color-muted-foreground);
+    flex-shrink: 0;
+}
+
+.youtube-input-field {
+    flex: 1;
+    height: 100%;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--color-foreground);
+    padding: 0 4px;
+    min-width: 0;
+}
+
+.youtube-input-field::placeholder {
+    color: var(--color-muted-foreground);
+    opacity: 0.6;
+}
+
+.youtube-input-submit {
+    flex-shrink: 0;
+    height: 100%;
+    padding: 0 14px;
+    background: var(--color-primary);
+    color: #fff;
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    letter-spacing: -0.01em;
+    transition: filter 0.12s;
+    -webkit-font-smoothing: antialiased;
+}
+
+.youtube-input-submit:hover {
+    filter: brightness(0.9);
+}
+
+.youtube-input-error {
+    font-size: 12px;
+    color: var(--color-destructive);
+    margin: 0;
+    padding: 0 2px;
+}
+
+.youtube-delete-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: var(--color-muted-foreground);
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 6px;
+    transition: background 0.1s, color 0.1s;
+    font-family: inherit;
+}
+
+.youtube-delete-btn:hover {
+    background: var(--color-destructive);
+    color: #fff;
+}
+
+/* ─ Embed / player state ─ */
+
+.youtube-embed-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.youtube-embed-ring {
+    border-radius: 12px;
+    overflow: hidden;
+    border: 2px solid transparent;
+    transition: border-color 0.15s;
+}
+
+.youtube-embed-ring--selected {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px color-mix(in oklch, var(--color-primary) 16%, transparent);
+}
+
+.youtube-aspect-box {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    /* 16:9 */
+    background: #000;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.youtube-iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+}
+
+.youtube-caption-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 13px;
+    color: var(--color-muted-foreground);
+    text-align: center;
+    padding: 0 4px;
+    caret-color: var(--color-primary);
+}
+
+.youtube-caption-input::placeholder {
+    color: var(--color-muted-foreground);
+    opacity: 0.45;
+}
+
+.youtube-controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    opacity: 0;
+    transition: opacity 0.15s;
+}
+
+.youtube-node-wrapper:hover .youtube-controls,
+.youtube-node-wrapper[data-selected="true"] .youtube-controls {
+    opacity: 1;
+}
+
+.youtube-control-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    font-family: inherit;
+    font-weight: 400;
+    color: var(--color-muted-foreground);
+    background: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 6px;
+    padding: 4px 10px;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s, border-color 0.1s;
+    -webkit-font-smoothing: antialiased;
+}
+
+.youtube-control-btn:hover {
+    background: var(--toolbar-hover-bg);
+    color: var(--color-foreground);
+    border-color: var(--color-foreground);
+}
+
+.youtube-control-btn--danger:hover {
+    background: var(--color-destructive);
+    color: #fff;
+    border-color: var(--color-destructive);
+}

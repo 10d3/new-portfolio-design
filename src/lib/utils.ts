@@ -1,39 +1,49 @@
-import { type ClassValue, clsx } from "clsx"
-import { twMerge } from "tailwind-merge"
+import { twMerge } from "tailwind-merge";
+import { clsx, type ClassValue } from "clsx";
+import type { Editor } from "@tiptap/react";
 
 export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
+    return twMerge(clsx(inputs));
 }
 
-export function formatDate(date: string) {
-  let currentDate = new Date().getTime();
-  if (!date.includes("T")) {
-    date = `${date}T00:00:00`;
-  }
-  let targetDate = new Date(date).getTime();
-  let timeDifference = Math.abs(currentDate - targetDate);
-  let daysAgo = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-
-  let fullDate = new Date(date).toLocaleString("en-us", {
-    month: "long",
-    day: "numeric",
-    year: "numeric",
-  });
-
-  if (daysAgo < 1) {
-    return "Today";
-  } else if (daysAgo < 7) {
-    return `${fullDate} (${daysAgo}d ago)`;
-  } else if (daysAgo < 30) {
-    const weeksAgo = Math.floor(daysAgo / 7);
-    return `${fullDate} (${weeksAgo}w ago)`;
-  } else if (daysAgo < 365) {
-    const monthsAgo = Math.floor(daysAgo / 30);
-    return `${fullDate} (${monthsAgo}mo ago)`;
-  } else {
-    const yearsAgo = Math.floor(daysAgo / 365);
-    return `${fullDate} (${yearsAgo}y ago)`;
-  }
+export function formatDate(date: string): string {
+    return new Date(date).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
 }
 
-export const BASE_URL = `${"https://amherley.dev"}`
+export function isValidUrl(url: string): boolean {
+    try {
+        new URL(url);
+        return true;
+    } catch {
+        return false;
+    }
+}
+
+/** CSS class applied to node wrappers when they are selected in the editor. */
+export const NODE_HANDLES_SELECTED_STYLE_CLASSNAME = "node-selected";
+
+/**
+ * Duplicates the currently selected node in the Tiptap editor,
+ * inserting a copy immediately after it.
+ */
+export function duplicateContent(editor: Editor): void {
+    const { view, state } = editor;
+    const { selection } = state;
+    const { $anchor } = selection;
+
+    const node = $anchor.node();
+    const nodeStart = $anchor.before($anchor.depth);
+    const nodeEnd = nodeStart + node.nodeSize;
+
+    editor
+        .chain()
+        .focus()
+        .insertContentAt(nodeEnd, node.toJSON())
+        .run();
+
+    view.dispatch(view.state.tr.scrollIntoView());
+}

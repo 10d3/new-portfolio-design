@@ -292,7 +292,7 @@ export const DATA = {
     },
     {
       title: "Nexora",
-      href: "#",
+      href: "https://mynexora.net",
       dates: "April 2025 - Present",
       active: true,
       description:
@@ -308,12 +308,21 @@ export const DATA = {
         "Auth.js",
         "JSON Web Tokens (JWT)",
         "Typescript",
+        "Redis",
+        "BullMQ",
+        "Rich Text Editor",
+        "Rich Email Text Editor",
       ],
       links: [
         {
           type: "source",
           href: "https://github.com/10d3/nexora",
           icon: <Icons.github className="size-3" />,
+        },
+        {
+          type: "Website",
+          href: "https://mynexora.net",
+          icon: <Icons.globe className="size-3" />,
         },
       ],
       image: "",
