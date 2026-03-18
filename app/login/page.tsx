@@ -19,18 +19,26 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
-    const { error } = await authClient.signIn.email({
-      email,
-      password,
-    });
+    try {
+      const { error } = await authClient.signIn.email({
+        email,
+        password,
+      });
 
-    if (error) {
-      setError(error.message ?? "Invalid credentials");
+      if (error) {
+        setError(error.message ?? "Invalid credentials");
+        return;
+      }
+
+      // Flush the session cookie to the server before navigating
+      router.refresh();
+      router.push("/dashboard");
+    } catch (err) {
+      console.error("Sign-in error:", err);
+      setError("An unexpected error occurred. Please try again.");
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push("/dashboard");
   }
 
   return (
