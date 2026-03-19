@@ -768,3 +768,153 @@
     color: #fff;
     border-color: var(--color-destructive);
 }
+
+/* ── CodeBlockLowlight — One Light / One Dark Pro theme ─────────── */
+
+:root {
+    /* One Light */
+    --hljs-bg: #fafafa;
+    --hljs-fg: #383a42;
+    --hljs-border: #e5e5e6;
+    --hljs-keyword: #a626a4;       /* magenta  — keywords */
+    --hljs-string: #50a14f;        /* green    — strings */
+    --hljs-comment: #9d9d9f;       /* grey     — comments */
+    --hljs-number: #986801;        /* amber    — numbers */
+    --hljs-function: #4078f2;      /* blue     — functions */
+    --hljs-attr: #e45649;          /* red      — attributes */
+    --hljs-type: #c18401;          /* gold     — types */
+    --hljs-label-bg: rgba(0,0,0,0.04);
+    --hljs-label-fg: #696c77;
+}
+
+.dark {
+    /* One Dark Pro */
+    --hljs-bg: #282c34;
+    --hljs-fg: #abb2bf;
+    --hljs-border: #3e4451;
+    --hljs-keyword: #c678dd;       /* violet   — keywords */
+    --hljs-string: #98c379;        /* green    — strings */
+    --hljs-comment: #5c6370;       /* grey     — comments */
+    --hljs-number: #d19a66;        /* orange   — numbers */
+    --hljs-function: #61afef;      /* sky blue — functions */
+    --hljs-attr: #e06c75;          /* red      — attributes */
+    --hljs-type: #e5c07b;          /* yellow   — types */
+    --hljs-label-bg: rgba(255,255,255,0.06);
+    --hljs-label-fg: #636d83;
+}
+
+/* Outer pre block */
+.tiptap pre,
+.editor-content pre {
+    position: relative;
+    background: var(--hljs-bg);
+    color: var(--hljs-fg);
+    border: 1px solid var(--hljs-border);
+    border-radius: 10px;
+    margin: 1.25rem 0;
+    overflow: hidden;
+    font-family: ui-monospace, "Cascadia Code", "Fira Code", "Consolas", monospace;
+    font-size: 0.8125rem;
+    line-height: 1.7;
+}
+
+/* Language label (top-right) */
+.tiptap pre::before,
+.editor-content pre::before {
+    content: attr(data-language);
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 2px 10px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--hljs-label-fg);
+    background: var(--hljs-label-bg);
+    border-bottom-left-radius: 8px;
+    pointer-events: none;
+}
+
+/* Inner code block */
+.tiptap pre code,
+.editor-content pre code {
+    display: block;
+    padding: 1.125rem 1.25rem;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--hljs-border) transparent;
+    background: transparent;
+    color: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    white-space: pre;
+}
+
+/* ── Token colours ────────────────────────────────────────────── */
+
+.hljs-keyword,
+.hljs-selector-tag,
+.hljs-built_in,
+.hljs-name,
+.hljs-tag {
+    color: var(--hljs-keyword);
+    font-weight: 500;
+}
+
+.hljs-string,
+.hljs-attr,
+.hljs-selector-attr,
+.hljs-selector-pseudo,
+.hljs-addition {
+    color: var(--hljs-string);
+}
+
+.hljs-comment,
+.hljs-quote {
+    color: var(--hljs-comment);
+    font-style: italic;
+}
+
+.hljs-number,
+.hljs-literal,
+.hljs-variable,
+.hljs-template-variable,
+.hljs-link {
+    color: var(--hljs-number);
+}
+
+.hljs-title,
+.hljs-title.class_,
+.hljs-title.function_ {
+    color: var(--hljs-function);
+    font-weight: 600;
+}
+
+.hljs-type,
+.hljs-class .hljs-title {
+    color: var(--hljs-type);
+}
+
+.hljs-symbol,
+.hljs-bullet,
+.hljs-subst,
+.hljs-meta,
+.hljs-meta .hljs-keyword,
+.hljs-selector-id,
+.hljs-selector-class {
+    color: var(--hljs-attr);
+}
+
+.hljs-deletion {
+    color: var(--color-destructive, #ef4444);
+    background: color-mix(in oklch, var(--color-destructive, #ef4444) 12%, transparent);
+}
+
+.hljs-emphasis {
+    font-style: italic;
+}
+
+.hljs-strong {
+    font-weight: 700;
+}

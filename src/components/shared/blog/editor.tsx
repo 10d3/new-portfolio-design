@@ -1,9 +1,10 @@
 "use client";
 
-// import { Separator } from "@/components/ui/separator";
 import { EditorContent, type Extension, useEditor } from "@tiptap/react";
 import StarterKit from "@tiptap/starter-kit";
 import Placeholder from "@tiptap/extension-placeholder";
+import CodeBlockLowlight from "@tiptap/extension-code-block-lowlight";
+import { createLowlight, all } from "lowlight";
 import { ImageExtension } from "./extensions/image";
 import { ImagePlaceholder } from "./extensions/image-placeholder";
 import { SlashCommand } from "./extensions/slash-command";
@@ -17,6 +18,9 @@ import { ButtonNode } from "./extensions/button-node";
 import { YouTubeNode } from "./extensions/youtube-node";
 import { Editor as TiptapEditor } from "@tiptap/react";
 import { VariableNode } from "./extensions/variable-node";
+
+// Lowlight instance with all bundled languages
+const lowlight = createLowlight(all);
 
 export const Editor = ({
   content,
@@ -65,17 +69,20 @@ export const Editor = ({
           class: "my-2",
         },
       },
-      codeBlock: {
-        HTMLAttributes: {
-          class:
-            "bg-primary text-primary-foreground p-2 text-sm rounded-md p-1",
-        },
-      },
+      // Disabled — replaced by CodeBlockLowlight below
+      codeBlock: false,
       heading: {
         levels: [1, 2, 3, 4],
         HTMLAttributes: {
           class: "tiptap-heading",
         },
+      },
+    }),
+    CodeBlockLowlight.configure({
+      lowlight,
+      // No defaultLanguage → lowlight auto-detects from code content
+      HTMLAttributes: {
+        class: "hljs not-prose",
       },
     }),
     ButtonNode,

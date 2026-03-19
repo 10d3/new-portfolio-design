@@ -38,3 +38,5 @@ next-env.d.ts
 .env
 
 /src/db/seed.ts
+
+/src/db/seed-posts.ts

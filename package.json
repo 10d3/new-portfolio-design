@@ -10,7 +10,8 @@
     "db:push": "drizzle-kit push",
     "db:studio": "drizzle-kit studio",
     "db:generate": "drizzle-kit generate",
-    "db:seed": "tsx --env-file=.env src/db/seed.ts"
+    "db:seed": "tsx --env-file=.env src/db/seed.ts",
+    "db:seed-posts": "tsx --env-file=.env src/db/seed-posts.ts"
   },
   "dependencies": {
     "@radix-ui/react-avatar": "^1.1.0",
@@ -28,6 +29,7 @@
     "@radix-ui/react-tooltip": "^1.1.2",
     "@tiptap/core": "^3.10.7",
     "@tiptap/extension-bubble-menu": "^3.10.8",
+    "@tiptap/extension-code-block-lowlight": "^3.20.4",
     "@tiptap/extension-floating-menu": "^3.20.1",
     "@tiptap/extension-hard-break": "^3.13.0",
     "@tiptap/extension-image": "^3.10.7",
@@ -47,6 +49,7 @@
     "drizzle-orm": "^0.45.1",
     "framer-motion": "^12.18.1",
     "gray-matter": "^4.0.3",
+    "lowlight": "^3.3.0",
     "lucide-react": "^0.412.0",
     "next": "^15.5.4",
     "next-themes": "^0.3.0",
