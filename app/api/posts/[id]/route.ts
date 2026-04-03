@@ -3,6 +3,7 @@ import { posts } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { requireAuth } from "@/lib/auth-guard";
 
 type Params = { params: Promise<{ id: string }> };
 
@@ -14,7 +15,12 @@ export async function GET(_req: Request, { params }: Params) {
 }
 
 export async function PUT(request: Request, { params }: Params) {
+
+  const guard = await requireAuth();
+  if (guard.error) return guard.error;
+
   const { id } = await params;
+
   try {
     const body = await request.json();
     const [updated] = await db
@@ -31,6 +37,11 @@ export async function PUT(request: Request, { params }: Params) {
 }
 
 export async function PATCH(request: Request, { params }: Params) {
+
+  const guard = await requireAuth();
+  if (guard.error) return guard.error;
+
+
   const { id } = await params;
   const body = await request.json();
   const [updated] = await db
@@ -44,6 +55,10 @@ export async function PATCH(request: Request, { params }: Params) {
 }
 
 export async function DELETE(_req: Request, { params }: Params) {
+
+  const guard = await requireAuth();
+  if (guard.error) return guard.error;
+  
   const { id } = await params;
   await db.delete(posts).where(eq(posts.id, id));
   revalidatePath("/blog");

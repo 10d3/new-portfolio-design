@@ -2,6 +2,7 @@ import { db } from "@/db";
 import { posts } from "@/db/schema";
 import { NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
+import { requireAuth } from "@/lib/auth-guard";
 
 export async function GET() {
   const all = await db.select().from(posts);
@@ -9,6 +10,10 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+
+  const guard = await requireAuth();
+  if (guard.error) return guard.error;
+
   try {
     const body = await request.json();
     const [post] = await db.insert(posts).values(body).returning();
