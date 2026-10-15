@@ -473,6 +473,7 @@ export function createMcpServer(): Server {
 
         const finalSlug = slug ? slugify(slug) : slugify(title);
         const now = new Date();
+        const htmlBody = body ? await ensureHtmlContent(body) : null;
 
         const [newProject] = await db
           .insert(projects)
@@ -486,7 +487,7 @@ export function createMcpServer(): Server {
             teamSize: teamSize || null,
             challenges,
             outcomes,
-            body: body || null,
+            body: htmlBody,
             siteUrl: siteUrl || null,
             sourceUrl: sourceUrl || null,
             imageUrl: imageUrl || null,
@@ -544,7 +545,7 @@ export function createMcpServer(): Server {
         if (teamSize !== undefined) updateData.teamSize = teamSize;
         if (challenges !== undefined) updateData.challenges = challenges;
         if (outcomes !== undefined) updateData.outcomes = outcomes;
-        if (body !== undefined) updateData.body = body;
+        if (body !== undefined) updateData.body = body ? await ensureHtmlContent(body) : null;
         if (siteUrl !== undefined) updateData.siteUrl = siteUrl;
         if (sourceUrl !== undefined) updateData.sourceUrl = sourceUrl;
         if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
