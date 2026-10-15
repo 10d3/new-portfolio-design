@@ -1,6 +1,9 @@
 import BlurFade from "@/components/magicui/blur-fade";
 import { getBlogPosts } from "@/data/blog";
 import Link from "next/link";
+import { db } from "@/db";
+import { posts } from "@/db/schema";
+import { desc, eq } from "drizzle-orm";
 
 export const metadata = {
   title: "Tech Musings by 10D3",
@@ -58,18 +61,59 @@ export const metadata = {
 const BLUR_FADE_DELAY = 0.04;
 
 export default async function BlogPage() {
-  const posts = await getBlogPosts();
+  let postList: {
+    title: string;
+    slug: string;
+    publishedAt: string;
+  }[] = [];
+
+  try {
+    const dbPosts = await db
+      .select({
+        title: posts.title,
+        slug: posts.slug,
+        publishedAt: posts.publishedAt,
+        createdAt: posts.createdAt,
+      })
+      .from(posts)
+      .where(eq(posts.published, true))
+      .orderBy(desc(posts.publishedAt), desc(posts.createdAt));
+
+    if (dbPosts.length > 0) {
+      postList = dbPosts.map((p) => {
+        const dateObj = p.publishedAt ?? p.createdAt;
+        const dateStr = dateObj
+          ? new Date(dateObj).toISOString().split("T")[0]
+          : "";
+        return {
+          title: p.title,
+          slug: p.slug,
+          publishedAt: dateStr,
+        };
+      });
+    }
+  } catch (err) {
+    console.error("Failed to fetch blog posts from DB, falling back to static files:", err);
+  }
+
+  // Graceful fallback to static MDX files
+  if (postList.length === 0) {
+    const staticPosts = await getBlogPosts();
+    postList = staticPosts.map((post) => ({
+      title: post.metadata.title,
+      slug: post.slug,
+      publishedAt: post.metadata.publishedAt,
+    }));
+  }
 
   return (
     <section className="flex min-h-screen flex-col gap-6 px-6 md:px-0">
       <BlurFade delay={BLUR_FADE_DELAY}>
         <h1 className="font-medium text-2xl mb-8 tracking-tighter">blog</h1>
       </BlurFade>
-      {posts
+      {postList
         .sort((a, b) => {
-          if (
-            new Date(a.metadata.publishedAt) > new Date(b.metadata.publishedAt)
-          ) {
+          if (new Date(a.publishedAt) > new Date(b.publishedAt)) {
             return -1;
           }
           return 1;
@@ -81,9 +125,9 @@ export default async function BlogPage() {
               href={`/blog/${post.slug}`}
             >
               <div className="w-full flex flex-col">
-                <p className="tracking-tight">{post.metadata.title}</p>
+                <p className="tracking-tight">{post.title}</p>
                 <p className="h-6 text-xs text-muted-foreground">
-                  {post.metadata.publishedAt}
+                  {post.publishedAt}
                 </p>
               </div>
             </Link>
