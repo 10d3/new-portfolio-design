@@ -7,6 +7,23 @@ import { db } from "@/db";
 import { posts, projects } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
+import { markdownToHTML } from "@/data/blog";
+
+async function ensureHtmlContent(content: string): Promise<string> {
+  const trimmed = content.trim();
+  if (
+    trimmed.startsWith("<p>") ||
+    trimmed.startsWith("<div") ||
+    trimmed.startsWith("<h1") ||
+    trimmed.startsWith("<h2") ||
+    trimmed.startsWith("<h3") ||
+    trimmed.startsWith("<article") ||
+    trimmed.startsWith("<section")
+  ) {
+    return content;
+  }
+  return await markdownToHTML(content);
+}
 
 function safeRevalidate(path: string): void {
   try {
@@ -286,6 +303,7 @@ export function createMcpServer(): Server {
 
         const finalSlug = slug ? slugify(slug) : slugify(title);
         const now = new Date();
+        const htmlContent = content ? await ensureHtmlContent(content) : "";
 
         const [newPost] = await db
           .insert(posts)
@@ -293,7 +311,7 @@ export function createMcpServer(): Server {
             title,
             slug: finalSlug,
             summary,
-            content,
+            content: htmlContent,
             keywords,
             imageUrl: imageUrl || null,
             published,
@@ -338,7 +356,7 @@ export function createMcpServer(): Server {
         if (title !== undefined) updateData.title = title;
         if (newSlug !== undefined) updateData.slug = slugify(newSlug);
         if (summary !== undefined) updateData.summary = summary;
-        if (content !== undefined) updateData.content = content;
+        if (content !== undefined) updateData.content = await ensureHtmlContent(content);
         if (keywords !== undefined) updateData.keywords = keywords;
         if (imageUrl !== undefined) updateData.imageUrl = imageUrl;
         if (published !== undefined) {

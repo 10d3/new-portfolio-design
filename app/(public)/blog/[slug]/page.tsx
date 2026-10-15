@@ -10,6 +10,13 @@ import { Editor } from "@/components/shared/blog/editor";
 
 type Props = { params: Promise<{ slug: string }> };
 
+function toIso(date: Date | string | null | undefined): string | undefined {
+  if (!date) return undefined;
+  if (typeof date === "string") return date;
+  if (date instanceof Date) return date.toISOString();
+  return new Date(date).toISOString();
+}
+
 export async function generateMetadata({ params }: Props): Promise<Metadata | undefined> {
   const { slug } = await params;
   const [post] = await db
@@ -33,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata | un
       title: post.title,
       description: post.summary,
       type: "article",
-      publishedTime: post.publishedAt?.toISOString(),
+      publishedTime: toIso(post.publishedAt),
       url: `${DATA.url}/blog/${post.slug}`,
       images: [{ url: ogImage }],
     },
@@ -69,8 +76,8 @@ export default async function BlogPostPage({ params }: Props) {
             "@context": "https://schema.org",
             "@type": "BlogPosting",
             headline: post.title,
-            datePublished: post.publishedAt?.toISOString(),
-            dateModified: post.publishedAt?.toISOString(),
+            datePublished: toIso(post.publishedAt),
+            dateModified: toIso(post.updatedAt ?? post.publishedAt),
             description: post.summary,
             image: post.imageUrl
               ? post.imageUrl
@@ -90,7 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       <div className="flex justify-between items-center mt-2 mb-8 text-sm max-w-[650px]">
         <p className="text-sm text-neutral-600 dark:text-neutral-400">
-          {post.publishedAt ? formatDate(post.publishedAt.toISOString()) : ""}
+          {post.publishedAt ? formatDate(toIso(post.publishedAt)!) : ""}
         </p>
       </div>
 

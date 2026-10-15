@@ -23,6 +23,9 @@ export async function PUT(request: Request, { params }: Params) {
 
   try {
     const body = await request.json();
+    if (body.publishedAt !== undefined) {
+      body.publishedAt = body.publishedAt ? new Date(body.publishedAt) : null;
+    }
     const [updated] = await db
       .update(posts)
       .set({ ...body, updatedAt: new Date() })
@@ -44,6 +47,9 @@ export async function PATCH(request: Request, { params }: Params) {
 
   const { id } = await params;
   const body = await request.json();
+  if (body.publishedAt !== undefined) {
+    body.publishedAt = body.publishedAt ? new Date(body.publishedAt) : null;
+  }
   const [updated] = await db
     .update(posts)
     .set({ ...body, updatedAt: new Date() })
