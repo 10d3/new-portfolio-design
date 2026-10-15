@@ -70,6 +70,7 @@
     "uploadthing": "^7.7.4"
   },
   "devDependencies": {
+    "@modelcontextprotocol/sdk": "^1.32.1",
     "@types/node": "^20",
     "@types/pg": "^8.18.0",
     "@types/react": "^18",
