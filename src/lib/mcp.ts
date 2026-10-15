@@ -6,6 +6,35 @@ import {
 import { db } from "@/db";
 import { posts, projects } from "@/db/schema";
 import { desc, eq } from "drizzle-orm";
+import { revalidatePath } from "next/cache";
+
+function safeRevalidate(path: string): void {
+  try {
+    revalidatePath(path);
+  } catch {
+    // Graceful no-op when executed outside a Next.js request context (e.g. local CLI)
+  }
+}
+
+function revalidateBlog(slug?: string | null): void {
+  safeRevalidate("/blog");
+  safeRevalidate("/dashboard/blog");
+  safeRevalidate("/sitemap.xml");
+  safeRevalidate("/blog/sitemap.xml");
+  safeRevalidate("/");
+  if (slug) {
+    safeRevalidate(`/blog/${slug}`);
+  }
+}
+
+function revalidateProject(slug?: string | null): void {
+  safeRevalidate("/");
+  safeRevalidate("/projects");
+  safeRevalidate("/dashboard/projects");
+  if (slug) {
+    safeRevalidate(`/projects/${slug}`);
+  }
+}
 
 function slugify(str: string): string {
   return str
@@ -98,6 +127,22 @@ export function createMcpServer(): Server {
               keywords: { type: "array", items: { type: "string" }, description: "New keywords list" },
               imageUrl: { type: "string", description: "New cover image URL" },
               published: { type: "boolean", description: "Toggle published status (true or false)" },
+            },
+          },
+        },
+        {
+          name: "publish_blog",
+          description:
+            "Publish or unpublish a blog post by ID or slug, triggering cache revalidation for /blog and /blog/[slug].",
+          inputSchema: {
+            type: "object",
+            properties: {
+              id: { type: "string", description: "Post ID to publish/unpublish" },
+              slug: { type: "string", description: "Post slug to publish/unpublish" },
+              published: {
+                type: "boolean",
+                description: "true to publish, false to unpublish (defaults to true)",
+              },
             },
           },
         },
@@ -258,11 +303,13 @@ export function createMcpServer(): Server {
           })
           .returning();
 
+        revalidateBlog(newPost.slug);
+
         return {
           content: [
             {
               type: "text",
-              text: `✅ Blog draft created!\n- ID: ${newPost.id}\n- Title: "${newPost.title}"\n- Slug: /blog/${newPost.slug}\n- Status: ${newPost.published ? "Published" : "Draft"}\n- Edit in Dashboard: /dashboard/blog/${newPost.id}`,
+              text: `✅ Blog draft created!\n- ID: ${newPost.id}\n- Title: "${newPost.title}"\n- Slug: /blog/${newPost.slug}\n- Status: ${newPost.published ? "Published" : "Draft"}\n- Edit in Dashboard: /dashboard/blog/${newPost.id}\n- Cache revalidated: /blog, /dashboard/blog, /blog/${newPost.slug}`,
             },
           ],
         };
@@ -307,11 +354,47 @@ export function createMcpServer(): Server {
 
         if (!updated) throw new Error("Blog post not found to update");
 
+        revalidateBlog(updated.slug);
+        if (slug && slug !== updated.slug) {
+          revalidateBlog(slug);
+        }
+
         return {
           content: [
             {
               type: "text",
-              text: `✅ Blog post updated successfully!\n- ID: ${updated.id}\n- Title: "${updated.title}"\n- Slug: /blog/${updated.slug}\n- Status: ${updated.published ? "Published" : "Draft"}`,
+              text: `✅ Blog post updated successfully!\n- ID: ${updated.id}\n- Title: "${updated.title}"\n- Slug: /blog/${updated.slug}\n- Status: ${updated.published ? "Published" : "Draft"}\n- Cache revalidated: /blog, /dashboard/blog, /blog/${updated.slug}`,
+            },
+          ],
+        };
+      }
+
+      if (name === "publish_blog") {
+        const { id, slug, published = true } = args as any;
+        if (!id && !slug) throw new Error("Must provide either 'id' or 'slug' to publish/unpublish a post");
+
+        const condition = id ? eq(posts.id, id) : eq(posts.slug, slug);
+        const now = new Date();
+
+        const [updated] = await db
+          .update(posts)
+          .set({
+            published,
+            publishedAt: published ? now : null,
+            updatedAt: now,
+          })
+          .where(condition)
+          .returning();
+
+        if (!updated) throw new Error("Blog post not found to publish");
+
+        revalidateBlog(updated.slug);
+
+        return {
+          content: [
+            {
+              type: "text",
+              text: `✅ Blog post "${updated.title}" is now ${updated.published ? "Published" : "Draft"}!\n- Slug: /blog/${updated.slug}\n- Cache revalidated: /blog, /dashboard/blog, /blog/${updated.slug}`,
             },
           ],
         };
@@ -395,11 +478,13 @@ export function createMcpServer(): Server {
           })
           .returning();
 
+        revalidateProject(newProject.slug);
+
         return {
           content: [
             {
               type: "text",
-              text: `✅ Project created!\n- ID: ${newProject.id}\n- Title: "${newProject.title}"\n- Slug: /projects/${newProject.slug}\n- Active on Homepage: ${newProject.active ? "Yes" : "No (Draft)"}\n- Edit in Dashboard: /dashboard/projects/${newProject.id}`,
+              text: `✅ Project created!\n- ID: ${newProject.id}\n- Title: "${newProject.title}"\n- Slug: /projects/${newProject.slug}\n- Active on Homepage: ${newProject.active ? "Yes" : "No (Draft)"}\n- Edit in Dashboard: /dashboard/projects/${newProject.id}\n- Cache revalidated: /, /projects, /dashboard/projects, /projects/${newProject.slug}`,
             },
           ],
         };
@@ -455,11 +540,16 @@ export function createMcpServer(): Server {
 
         if (!updated) throw new Error("Project not found to update");
 
+        revalidateProject(updated.slug);
+        if (slug && slug !== updated.slug) {
+          revalidateProject(slug);
+        }
+
         return {
           content: [
             {
               type: "text",
-              text: `✅ Project updated successfully!\n- ID: ${updated.id}\n- Title: "${updated.title}"\n- Slug: /projects/${updated.slug}\n- Active on Homepage: ${updated.active ? "Yes" : "No"}`,
+              text: `✅ Project updated successfully!\n- ID: ${updated.id}\n- Title: "${updated.title}"\n- Slug: /projects/${updated.slug}\n- Active on Homepage: ${updated.active ? "Yes" : "No"}\n- Cache revalidated: /, /projects, /dashboard/projects, /projects/${updated.slug}`,
             },
           ],
         };
